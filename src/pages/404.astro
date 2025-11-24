@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import "../styles/global.css";
+---
+
+<Layout 
+	title="404 - Página no encontrada | Municipalidad de Lonquimay"
+	description="La página que buscas no existe. Volvé al inicio del portal ciudadano de Lonquimay."
+>
+	<div class="min-h-screen bg-gray-50 flex flex-col">
+		<Header client:load currentPage="404" />
+		
+		<main class="flex-grow flex items-center justify-center px-4 py-16">
+			<div class="text-center max-w-2xl mx-auto">
+				<!-- Ícono gracioso -->
+				<div class="mb-8">
+					<div class="text-9xl mb-4">🐄</div>
+					<div class="text-6xl mb-6">🌾</div>
+				</div>
+				
+				<!-- Mensaje principal -->
+				<h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4" style="font-family: 'Montserrat', sans-serif;">
+					¡Epa! Te perdiste en el campo.
+				</h1>
+				
+				<p class="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+					La página que buscás no existe.
+				</p>
+				
+				<p class="text-gray-500 mb-12 max-w-md mx-auto">
+					Parece que te desviaste del camino. No te preocupes, en la Pampa siempre hay un horizonte que te guía de vuelta.
+				</p>
+				
+				<!-- Botón para volver al inicio -->
+				<a 
+					href="/" 
+					class="inline-flex items-center gap-2 bg-[#7bc143] hover:bg-[#6aa839] text-white px-8 py-4 rounded-lg font-bold text-lg shadow-lg shadow-green-900/20 transition-all"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="m12 19-7-7 7-7"/>
+						<path d="M19 12H5"/>
+					</svg>
+					Volver al Inicio
+				</a>
+			</div>
+		</main>
+		
+		<Footer client:load />
+	</div>
+</Layout>
+

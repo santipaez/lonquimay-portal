@@ -1,0 +1,208 @@
+---
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { Phone, Heart, Building2, Zap, Shield, Flame, Ambulance, Hospital } from "lucide-react";
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+
+        <title>Números Útiles - Municipalidad de Lonquimay</title>
+        <meta
+            name="description"
+            content="Números de teléfono útiles de Lonquimay: Policía, Bomberos, Hospital, Ambulancia, Cooperativa Eléctrica y más."
+        />
+        <meta
+            name="keywords"
+            content="Lonquimay, números útiles, emergencias, policía, bomberos, hospital, La Pampa"
+        />
+    </head>
+    <body>
+        <Header client:load currentPage="Números Útiles" />
+
+        <main class="min-h-screen bg-gray-50">
+            {/* Hero Section */}
+            <section
+                class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16 md:py-24"
+            >
+                <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <Phone class="w-12 h-12 md:w-16 md:h-16" />
+                        <h1 class="text-4xl md:text-5xl font-bold">
+                            Números Útiles
+                        </h1>
+                    </div>
+                    <p class="text-xl text-white/90">
+                        Contactos importantes de Lonquimay al alcance de tu mano
+                    </p>
+                </div>
+            </section>
+
+            {/* Main Content */}
+            <section class="py-12 md:py-16">
+                <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {/* Policía */}
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-l-4 border-blue-500">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                                    <Shield class="w-7 h-7 text-blue-600" />
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Policía</h3>
+                            <p class="text-gray-600 text-sm mb-4">Emergencias y seguridad</p>
+                            <a
+                                href="tel:101"
+                                class="flex items-center gap-2 text-blue-600 font-bold text-lg hover:text-blue-700 transition-colors"
+                            >
+                                <Phone class="w-5 h-5" />
+                                101
+                            </a>
+                            <p class="text-gray-500 text-xs mt-2">Emergencias 24hs</p>
+                        </div>
+
+                        {/* Bomberos */}
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-l-4 border-red-500">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
+                                    <Flame class="w-7 h-7 text-red-600" />
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Bomberos</h3>
+                            <p class="text-gray-600 text-sm mb-4">Emergencias y rescates</p>
+                            <a
+                                href="tel:100"
+                                class="flex items-center gap-2 text-red-600 font-bold text-lg hover:text-red-700 transition-colors"
+                            >
+                                <Phone class="w-5 h-5" />
+                                100
+                            </a>
+                            <p class="text-gray-500 text-xs mt-2">Emergencias 24hs</p>
+                        </div>
+
+                        {/* Hospital */}
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-l-4 border-green-500">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                                    <Hospital class="w-7 h-7 text-green-600" />
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Hospital</h3>
+                            <p class="text-gray-600 text-sm mb-4">Atención médica</p>
+                            <a
+                                href="tel:02954494255"
+                                class="flex items-center gap-2 text-green-600 font-bold text-lg hover:text-green-700 transition-colors"
+                            >
+                                <Phone class="w-5 h-5" />
+                                (02954) 494255
+                            </a>
+                            <p class="text-gray-500 text-xs mt-2">Atención 24hs</p>
+                        </div>
+
+                        {/* Ambulancia */}
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-l-4 border-red-500">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
+                                    <Ambulance class="w-7 h-7 text-red-600" />
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Ambulancia</h3>
+                            <p class="text-gray-600 text-sm mb-4">Emergencias médicas</p>
+                            <a
+                                href="tel:107"
+                                class="flex items-center gap-2 text-red-600 font-bold text-lg hover:text-red-700 transition-colors"
+                            >
+                                <Phone class="w-5 h-5" />
+                                107
+                            </a>
+                            <p class="text-gray-500 text-xs mt-2">Emergencias 24hs</p>
+                        </div>
+
+                        {/* Cooperativa Eléctrica */}
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-l-4 border-yellow-500">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                    <Zap class="w-7 h-7 text-yellow-600" />
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Cooperativa Eléctrica</h3>
+                            <p class="text-gray-600 text-sm mb-4">Servicios eléctricos</p>
+                            <a
+                                href="tel:02954494255"
+                                class="flex items-center gap-2 text-yellow-600 font-bold text-lg hover:text-yellow-700 transition-colors"
+                            >
+                                <Phone class="w-5 h-5" />
+                                (02954) 494255
+                            </a>
+                            <p class="text-gray-500 text-xs mt-2">(Actualizar con número real)</p>
+                        </div>
+
+                        {/* Municipalidad */}
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all border-l-4 border-[#7bc143]">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                                    <Building2 class="w-7 h-7 text-[#7bc143]" />
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Municipalidad</h3>
+                            <p class="text-gray-600 text-sm mb-4">Informes y trámites</p>
+                            <a
+                                href="tel:02954494255"
+                                class="flex items-center gap-2 text-[#7bc143] font-bold text-lg hover:text-[#6aa839] transition-colors"
+                            >
+                                <Phone class="w-5 h-5" />
+                                (02954) 494255
+                            </a>
+                            <p class="text-gray-500 text-xs mt-2">Lun-Vie 7:30-12:30</p>
+                        </div>
+                    </div>
+
+                    {/* Emergency Banner */}
+                    <div class="mt-12 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl shadow-xl p-8 text-white">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                                <Phone class="w-8 h-8" />
+                            </div>
+                            <div>
+                                <h2 class="text-2xl md:text-3xl font-bold mb-2">Emergencias</h2>
+                                <p class="text-white/90">En caso de emergencia, llamá inmediatamente</p>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-4 mt-6">
+                            <a
+                                href="tel:100"
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-4 hover:bg-white/30 transition-all text-center"
+                            >
+                                <p class="font-bold text-2xl mb-1">100</p>
+                                <p class="text-sm">Bomberos</p>
+                            </a>
+                            <a
+                                href="tel:101"
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-4 hover:bg-white/30 transition-all text-center"
+                            >
+                                <p class="font-bold text-2xl mb-1">101</p>
+                                <p class="text-sm">Policía</p>
+                            </a>
+                            <a
+                                href="tel:107"
+                                class="bg-white/20 backdrop-blur-sm rounded-xl p-4 hover:bg-white/30 transition-all text-center"
+                            >
+                                <p class="font-bold text-2xl mb-1">107</p>
+                                <p class="text-sm">Ambulancia</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <Footer client:load />
+    </body>
+</html>
+

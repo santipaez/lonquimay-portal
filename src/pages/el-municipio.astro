@@ -1,0 +1,190 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import "../styles/global.css";
+---
+
+<Layout 
+	title="El Municipio - Municipalidad de Lonquimay"
+	description="Conocé las autoridades e historia de la Municipalidad de Lonquimay, La Pampa."
+>
+	<Header client:load currentPage="El Municipio" />
+
+        <main class="min-h-screen bg-gray-50">
+            <!-- Page Header -->
+            <section
+                class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16"
+            >
+                <div class="container mx-auto px-4">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                        El Municipio
+                    </h1>
+                    <p class="text-xl text-white/90 max-w-2xl">
+                        Conocé más sobre nuestra organización, autoridades y la
+                        historia que nos representa.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Content -->
+            <section class="py-16">
+                <div class="container mx-auto px-4 max-w-5xl">
+                    <!-- Autoridades Section -->
+                    <div
+                        class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12"
+                    >
+                        <h2
+                            class="text-3xl font-bold text-gray-800 mb-8 border-b-4 border-[#7bc143] pb-4 inline-block"
+                        >
+                            Autoridades
+                        </h2>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div
+                                class="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border border-gray-100"
+                            >
+                                <h3
+                                    class="text-xl font-bold text-[#7bc143] mb-2"
+                                >
+                                    Intendente Municipal
+                                </h3>
+                                <p class="text-gray-600">
+                                    A cargo de la administración ejecutiva del
+                                    municipio
+                                </p>
+                            </div>
+
+                            <div
+                                class="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border border-gray-100"
+                            >
+                                <h3
+                                    class="text-xl font-bold text-[#7bc143] mb-2"
+                                >
+                                    Concejo Deliberante
+                                </h3>
+                                <p class="text-gray-600">
+                                    Órgano legislativo y de control del
+                                    municipio
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 grid md:grid-cols-3 gap-6">
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-gray-800 mb-3">
+                                    Áreas Administrativas
+                                </h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li>• Rentas</li>
+                                    <li>• Planificación Urbana y Hábitat</li>
+                                    <li>• Registro Civil</li>
+                                    <li>• Juzgado de Paz</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-gray-800 mb-3">
+                                    Servicios al Ciudadano
+                                </h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li>• Delegación ISS</li>
+                                    <li>• Punto Digital</li>
+                                    <li>• CUV</li>
+                                    <li>• Cabina Bromatológica</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-gray-800 mb-3">
+                                    Control y Regulación
+                                </h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li>• Juzgado de Faltas</li>
+                                    <li>• Tránsito</li>
+                                    <li>• Guías de Transporte</li>
+                                    <li>• Archivo Histórico</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historia Section -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+                        <h2
+                            class="text-3xl font-bold text-gray-800 mb-8 border-b-4 border-[#7bc143] pb-4 inline-block"
+                        >
+                            Nuestra Historia
+                        </h2>
+
+                        <div class="prose max-w-none">
+                            <div
+                                class="bg-gradient-to-r from-[#7bc143]/10 to-transparent p-6 rounded-xl mb-8 border-l-4 border-[#7bc143]"
+                            >
+                                <p
+                                    class="text-lg text-gray-700 leading-relaxed"
+                                >
+                                    Lonquimay es una localidad ubicada en el
+                                    corazón de La Pampa, Argentina. Su historia
+                                    está ligada al desarrollo de la región
+                                    pampeana y al espíritu de trabajo de sus
+                                    habitantes.
+                                </p>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <h3
+                                        class="text-xl font-bold text-gray-800 mb-4"
+                                    >
+                                        Patrimonio Cultural
+                                    </h3>
+                                    <p class="text-gray-600 mb-4">
+                                        El municipio cuenta con un Archivo
+                                        Histórico que preserva la memoria
+                                        colectiva de nuestra comunidad,
+                                        resguardando documentos y testimonios
+                                        que dan cuenta de nuestro desarrollo a
+                                        lo largo del tiempo.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3
+                                        class="text-xl font-bold text-gray-800 mb-4"
+                                    >
+                                        Desarrollo Local
+                                    </h3>
+                                    <p class="text-gray-600 mb-4">
+                                        A través de los años, Lonquimay ha
+                                        crecido como un polo de desarrollo en la
+                                        región, manteniendo su identidad y
+                                        valores comunitarios mientras se
+                                        moderniza para servir mejor a sus
+                                        ciudadanos.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-xl">
+                                <h3
+                                    class="text-xl font-bold text-gray-800 mb-4"
+                                >
+                                    Visión y Misión
+                                </h3>
+                                <p class="text-gray-600">
+                                    Trabajamos día a día para ser un municipio
+                                    modelo en gestión pública, transparencia y
+                                    servicios al ciudadano, preservando nuestra
+                                    identidad mientras construimos un futuro
+                                    próspero para las próximas generaciones.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+	<Footer client:load />
+</Layout>

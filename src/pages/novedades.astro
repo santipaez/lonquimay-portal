@@ -1,0 +1,169 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import "../styles/global.css";
+
+const NEWS = [
+    {
+        id: 1,
+        category: "Digital",
+        title: "Portal Cann Digital de Lonquimay",
+        snippet:
+            "Nuevos servicios digitales disponibles para facilitar trámites y gestiones municipales.",
+        image: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        date: "24 Nov 2025",
+    },
+    {
+        id: 2,
+        category: "Obras",
+        title: "Planificación de Urbana y Hábitat",
+        snippet:
+            "Avances en proyectos de planificación urbana y mejoras habitacionales en el municipio.",
+        image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        date: "22 Nov 2025",
+    },
+    {
+        id: 3,
+        category: "Social",
+        title: "Programas de Asistencia Social",
+        snippet:
+            "Nuevas iniciativas de asistencia social y programas comunitarios para vecinos de Lonquimay.",
+        image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        date: "20 Nov 2025",
+    },
+    {
+        id: 4,
+        category: "Cultura",
+        title: "Eventos Culturales",
+        snippet:
+            "Calendario de actividades culturales y recreativas programadas para este mes.",
+        image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        date: "18 Nov 2025",
+    },
+    {
+        id: 5,
+        category: "Salud",
+        title: "Campaña de Vacunación",
+        snippet:
+            "Jornada de vacunación gratuita en el Centro de Salud Municipal.",
+        image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        date: "15 Nov 2025",
+    },
+    {
+        id: 6,
+        category: "Infraestructura",
+        title: "Mejoras en Infraestructura",
+        snippet:
+            "Trabajos de mantenimiento y mejora en calles y espacios públicos de la localidad.",
+        image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        date: "12 Nov 2025",
+    },
+];
+---
+
+<Layout 
+	title="Novedades - Municipalidad de Lonquimay"
+	description="Últimas noticias y novedades de la Municipalidad de Lonquimay, La Pampa."
+>
+	<Header client:load currentPage="Novedades" />
+
+        <main class="min-h-screen bg-gray-50">
+            {/* Hero Section */}
+            <section
+                class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16 md:py-24"
+            >
+                <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                        Novedades
+                    </h1>
+                    <p class="text-xl text-white/90">
+                        Mantente informado sobre las últimas noticias de
+                        Lonquimay
+                    </p>
+                </div>
+            </section>
+
+            {/* News Grid */}
+            <section class="py-12 md:py-16">
+                <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {
+                            NEWS.map((news) => (
+                                <article class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group">
+                                    <div class="h-56 overflow-hidden relative">
+                                        <span class="absolute top-4 left-4 bg-[#7bc143] text-white text-xs font-bold px-3 py-1.5 rounded-full z-10">
+                                            {news.category}
+                                        </span>
+                                        <span class="absolute top-4 right-4 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full z-10">
+                                            {news.date}
+                                        </span>
+                                        <img
+                                            src={news.image}
+                                            alt={news.title}
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    </div>
+                                    <div class="p-6">
+                                        <h3 class="font-bold text-xl mb-3 leading-tight text-gray-800 group-hover:text-[#7bc143] transition-colors">
+                                            {news.title}
+                                        </h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                            {news.snippet}
+                                        </p>
+                                        <a
+                                            href="#"
+                                            class="inline-flex items-center gap-2 text-[#7bc143] font-semibold text-sm hover:gap-3 transition-all"
+                                        >
+                                            Leer más
+                                            <svg
+                                                class="w-4 h-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 5l7 7-7 7"
+                                                />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </article>
+                            ))
+                        }
+                    </div>
+
+                    {/* Pagination */}
+                    <div class="mt-12 flex justify-center gap-2">
+                        <button
+                            class="px-4 py-2 bg-white rounded-lg shadow hover:bg-[#7bc143] hover:text-white transition-colors font-semibold"
+                        >
+                            Anterior
+                        </button>
+                        <button
+                            class="px-4 py-2 bg-[#7bc143] text-white rounded-lg shadow font-semibold"
+                            >1</button
+                        >
+                        <button
+                            class="px-4 py-2 bg-white rounded-lg shadow hover:bg-[#7bc143] hover:text-white transition-colors font-semibold"
+                            >2</button
+                        >
+                        <button
+                            class="px-4 py-2 bg-white rounded-lg shadow hover:bg-[#7bc143] hover:text-white transition-colors font-semibold"
+                            >3</button
+                        >
+                        <button
+                            class="px-4 py-2 bg-white rounded-lg shadow hover:bg-[#7bc143] hover:text-white transition-colors font-semibold"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+	<Footer client:load />
+</Layout>

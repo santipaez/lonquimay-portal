@@ -1,0 +1,212 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { CreditCard, Clock, CheckCircle, MessageCircle, Copy, Check } from "lucide-react";
+import "../styles/global.css";
+---
+
+<Layout 
+	title="Información de Pagos - Municipalidad de Lonquimay"
+	description="Datos bancarios, horarios de caja y formas de pago de la Municipalidad de Lonquimay."
+>
+	<Header client:load currentPage="Pagos" />
+
+        <main class="min-h-screen bg-gray-50">
+            {/* Hero Section */}
+            <section
+                class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16 md:py-24"
+            >
+                <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <CreditCard class="w-12 h-12 md:w-16 md:h-16" />
+                        <h1 class="text-4xl md:text-5xl font-bold">
+                            Información de Pagos
+                        </h1>
+                    </div>
+                    <p class="text-xl text-white/90">
+                        Consulta dónde y cómo realizar tus pagos municipales
+                    </p>
+                </div>
+            </section>
+
+            {/* Main Content */}
+            <section class="py-12 md:py-16">
+                <div class="container mx-auto px-4 md:px-8 max-w-6xl space-y-8">
+                    {/* Datos Bancarios */}
+                    <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                            <CreditCard class="w-8 h-8 text-[#7bc143]" />
+                            Datos Bancarios para Transferencias
+                        </h2>
+                        <p class="text-gray-600 mb-6">
+                            Podés realizar transferencias desde MercadoPago, Cuenta DNI o cualquier billetera virtual usando estos datos:
+                        </p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            {/* Alias */}
+                            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-100">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-bold text-gray-800 text-lg">Alias</h3>
+                                    <button 
+                                        id="copyAlias"
+                                        class="p-2 hover:bg-green-200 rounded-lg transition-colors"
+                                        title="Copiar"
+                                    >
+                                        <Copy class="w-5 h-5 text-[#7bc143]" />
+                                    </button>
+                                </div>
+                                <p id="aliasText" class="text-2xl font-bold text-[#7bc143] font-mono">
+                                    MUNICIPALIDAD.LONQUIMAY
+                                </p>
+                                <p class="text-sm text-gray-500 mt-2">(Ejemplo - actualizar con datos reales)</p>
+                            </div>
+
+                            {/* CBU */}
+                            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border-2 border-blue-100">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-bold text-gray-800 text-lg">CBU</h3>
+                                    <button 
+                                        id="copyCBU"
+                                        class="p-2 hover:bg-blue-200 rounded-lg transition-colors"
+                                        title="Copiar"
+                                    >
+                                        <Copy class="w-5 h-5 text-[#4a9bb7]" />
+                                    </button>
+                                </div>
+                                <p id="cbuText" class="text-2xl font-bold text-[#4a9bb7] font-mono break-all">
+                                    0123456789012345678901
+                                </p>
+                                <p class="text-sm text-gray-500 mt-2">(Ejemplo - actualizar con datos reales)</p>
+                            </div>
+                        </div>
+
+                        <div id="copySuccess" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
+                            <Check class="w-5 h-5" />
+                            <span>¡Copiado al portapapeles!</span>
+                        </div>
+                    </div>
+
+                    {/* Horarios de Caja */}
+                    <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                            <Clock class="w-8 h-8 text-[#7bc143]" />
+                            Horarios de Caja
+                        </h2>
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <p class="text-lg text-gray-700 mb-2">
+                                <span class="font-bold">Lunes a Viernes:</span> de 7:30 a 12:30 hs
+                            </p>
+                            <p class="text-gray-600">
+                                Edificio Municipal - Sector Rentas
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Qué se puede pagar */}
+                    <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                            <CheckCircle class="w-8 h-8 text-[#7bc143]" />
+                            Qué se puede pagar
+                        </h2>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-green-50 rounded-xl p-6 border border-green-100">
+                                <div class="w-12 h-12 bg-[#7bc143] rounded-lg flex items-center justify-center mb-4">
+                                    <CheckCircle class="w-6 h-6 text-white" />
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Tasas Municipales</h3>
+                                <p class="text-sm text-gray-600">Impuestos y tasas municipales</p>
+                            </div>
+                            <div class="bg-green-50 rounded-xl p-6 border border-green-100">
+                                <div class="w-12 h-12 bg-[#7bc143] rounded-lg flex items-center justify-center mb-4">
+                                    <CheckCircle class="w-6 h-6 text-white" />
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Guías de Hacienda</h3>
+                                <p class="text-sm text-gray-600">Documentación para transporte</p>
+                            </div>
+                            <div class="bg-green-50 rounded-xl p-6 border border-green-100">
+                                <div class="w-12 h-12 bg-[#7bc143] rounded-lg flex items-center justify-center mb-4">
+                                    <CheckCircle class="w-6 h-6 text-white" />
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-2">Cementerio</h3>
+                                <p class="text-sm text-gray-600">Servicios de cementerio</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* WhatsApp Button */}
+                    <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-xl p-8 md:p-10 text-white">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div class="flex-1">
+                                <h2 class="text-2xl md:text-3xl font-bold mb-3 flex items-center gap-3">
+                                    <MessageCircle class="w-8 h-8" />
+                                    Enviar Comprobante
+                                </h2>
+                                <p class="text-white/90 text-lg">
+                                    ¿Ya realizaste la transferencia? Enviá el comprobante por WhatsApp para agilizar el proceso.
+                                </p>
+                            </div>
+                            <a
+                                href="https://wa.me/5492954494255?text=Hola,%20quiero%20enviar%20el%20comprobante%20de%20transferencia"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="bg-white text-[#7bc143] px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl flex items-center gap-3 whitespace-nowrap"
+                            >
+                                <MessageCircle class="w-6 h-6" />
+                                Enviar por WhatsApp
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Información Adicional */}
+                    <div class="bg-blue-50 rounded-2xl p-8 border border-blue-100">
+                        <h3 class="font-bold text-gray-800 mb-4 text-lg">💡 Consejos</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start gap-2">
+                                <span class="text-[#7bc143] mt-1">•</span>
+                                <span>Guardá siempre el comprobante de transferencia</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-[#7bc143] mt-1">•</span>
+                                <span>En el concepto de la transferencia, indicá qué estás pagando (ej: "Tasas municipales - DNI 12345678")</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-[#7bc143] mt-1">•</span>
+                                <span>El envío del comprobante por WhatsApp agiliza la acreditación del pago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+	<Footer client:load />
+
+	<script>
+            // Funcionalidad para copiar al portapapeles
+            function setupCopyButton(buttonId, textId, successId) {
+                const button = document.getElementById(buttonId);
+                const textElement = document.getElementById(textId);
+                const successMessage = document.getElementById(successId);
+                
+                if (button && textElement) {
+                    button.addEventListener('click', async () => {
+                        const text = textElement.textContent.trim();
+                        try {
+                            await navigator.clipboard.writeText(text);
+                            successMessage.classList.remove('hidden');
+                            setTimeout(() => {
+                                successMessage.classList.add('hidden');
+                            }, 3000);
+                        } catch (err) {
+                            console.error('Error al copiar:', err);
+                        }
+                    });
+                }
+            }
+
+		setupCopyButton('copyAlias', 'aliasText', 'copySuccess');
+		setupCopyButton('copyCBU', 'cbuText', 'copySuccess');
+	</script>
+</Layout>
+
