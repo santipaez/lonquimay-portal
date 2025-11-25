@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 // Coordenadas de Lonquimay, La Pampa, Argentina
 const LONQUIMAY_LAT = -36.4667;
 const LONQUIMAY_LON = -63.6167;
