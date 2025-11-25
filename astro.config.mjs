@@ -9,6 +9,14 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL || 'https://lonquimay.gob.ar',
   vite: {
+    server: {
+      host: true, // Permite acceso desde cualquier host
+      allowedHosts: [
+        '.ngrok-free.app',
+        '.ngrok.io',
+        '.ngrok.app'
+      ]
+    },
     plugins: [
       tailwindcss(),
       VitePWA({
