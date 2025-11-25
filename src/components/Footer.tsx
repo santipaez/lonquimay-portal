@@ -22,9 +22,18 @@ export default function Footer() {
                     <div className="lg:col-span-5">
                         <div className="flex items-center gap-3 mb-6">
                             <img
-                                src="/logo-lonquimay.png"
+                                src="/logo-lonquimay-96.png"
+                                srcSet="/logo-lonquimay-96.png 96w, /logo-lonquimay-192.png 192w"
+                                sizes="96px"
                                 alt="Logo Lonquimay"
                                 className="h-12 w-auto object-contain"
+                                width="48"
+                                height="48"
+                                loading="lazy"
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = '/logo-lonquimay.png';
+                                }}
                             />
                             <div className="flex flex-col" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                                 <span className="text-white/80 text-[10px] md:text-xs font-normal uppercase tracking-wide leading-tight">

@@ -50,11 +50,28 @@ html {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Optimización para elementos animados */
+/* Optimización para elementos animados y View Transitions */
 [data-astro-transition-persist],
 header {
     will-change: transform, opacity;
     transform: translateZ(0);
+}
+
+/* Optimización para reducir reflows forzados en View Transitions */
+[data-astro-transition],
+[data-astro-transition-persist] {
+    contain: layout style paint;
+}
+
+/* Evitar reflows durante transiciones */
+html[data-astro-transition] {
+    contain: layout;
+}
+
+/* Optimizar elementos que se consultan frecuentemente */
+header,
+[data-astro-transition-persist] {
+    contain: layout style;
 }
 
 /* Line clamp utility for text truncation */

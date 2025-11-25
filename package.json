@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "optimize-logo": "node scripts/optimize-logo.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@vercel/og": "^0.8.5",
     "pagefind": "^1.4.0",
+    "sharp": "^0.33.0",
     "vite-plugin-pwa": "^1.1.0"
   }
 }

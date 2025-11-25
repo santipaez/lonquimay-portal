@@ -19,7 +19,7 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 <html lang="es">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
 		
 		<!-- PWA Meta Tags -->
@@ -29,8 +29,45 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 		<meta name="apple-mobile-web-app-title" content="Lonquimay" />
 		<meta name="mobile-web-app-capable" content="yes" />
 		
-		<!-- Astro View Transitions -->
-		<ViewTransitions />
+		<!-- Astro View Transitions - Optimizado para reducir reflows -->
+		<ViewTransitions fallback="animate" />
+		<meta name="astro-view-transitions-fallback" content="animate" />
+		<script is:inline>
+			(function() {
+				// Optimización: Reducir prefetching agresivo de View Transitions
+				if (typeof window !== 'undefined' && window.document) {
+					// Deshabilitar prefetching automático en conexiones lentas
+					if ('connection' in navigator) {
+						const conn = navigator.connection;
+						if (conn && (conn.saveData || /2g/.test(conn.effectiveType))) {
+							document.documentElement.setAttribute('data-astro-prefetch', 'false');
+						}
+					}
+					
+					// Optimizar scroll durante transiciones usando requestAnimationFrame
+					let scrollTimeout;
+					const originalScrollTo = window.scrollTo;
+					window.scrollTo = function(...args) {
+						if (scrollTimeout) {
+							cancelAnimationFrame(scrollTimeout);
+						}
+						scrollTimeout = requestAnimationFrame(() => {
+							originalScrollTo.apply(window, args);
+						});
+					};
+					
+					// Usar will-change estratégicamente para elementos persistentes
+					document.addEventListener('DOMContentLoaded', function() {
+						const persistentElements = document.querySelectorAll('[data-astro-transition-persist]');
+						persistentElements.forEach(el => {
+							if (el instanceof HTMLElement) {
+								el.style.willChange = 'transform, opacity';
+							}
+						});
+					});
+				}
+			})();
+		</script>
 		
 		<!-- Preconnect para recursos externos críticos -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -79,12 +116,12 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 		<link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecg.woff2" as="font" type="font/woff2" crossorigin />
 
 		<!-- Favicon -->
-		<link rel="icon" type="image/png" href="/logo-lonquimay.png" />
-		<link rel="apple-touch-icon" href="/logo-lonquimay.png" />
-		<link rel="shortcut icon" href="/logo-lonquimay.png" />
+		<link rel="icon" type="image/png" href="/logo-lonquimay-96.png" />
+		<link rel="apple-touch-icon" href="/logo-lonquimay-192.png" />
+		<link rel="shortcut icon" href="/logo-lonquimay-96.png" />
 		
-		<!-- Preload recursos críticos -->
-		<link rel="preload" href="/logo-lonquimay.png" as="image" />
+		<!-- Preload recursos críticos - Logo optimizado (solo en header) -->
+		<link rel="preload" href="/logo-lonquimay-56.png" as="image" fetchpriority="high" />
 
 		<!-- SEO Meta Tags -->
 		<title>{title}</title>

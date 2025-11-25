@@ -5,9 +5,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Logo = ({ isSolid }: { isSolid: boolean }) => (
     <div className="flex items-center gap-2 sm:gap-3">
         <img
-            src="/logo-lonquimay.png"
+            src="/logo-lonquimay-56.png"
+            srcSet="/logo-lonquimay-56.png 56w, /logo-lonquimay-64.png 64w, /logo-lonquimay-96.png 96w"
+            sizes="(max-width: 640px) 56px, (max-width: 768px) 64px, 96px"
             alt="Logo Lonquimay"
             className="h-10 sm:h-11 md:h-14 w-auto object-contain shrink-0"
+            width="56"
+            height="56"
+            loading="eager"
+            fetchPriority="high"
+            onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/logo-lonquimay.png';
+            }}
         />
         <div className="flex flex-col min-w-0" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             <span className={`text-xs sm:text-sm md:text-base font-normal uppercase tracking-wide leading-tight transition-colors whitespace-nowrap ${
@@ -38,15 +48,17 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
         }
 
         let ticking = false;
-        let lastScrollY = window.scrollY;
+        let lastScrollY = 0;
+        let cachedScrollY = 0;
         
         const handleScroll = () => {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    const scrollPosition = window.scrollY;
-                    if (Math.abs(scrollPosition - lastScrollY) > 5) {
-                        setIsScrolled(scrollPosition > 50);
-                        lastScrollY = scrollPosition;
+                    // Usar valor en caché para evitar múltiples lecturas
+                    cachedScrollY = window.scrollY;
+                    if (Math.abs(cachedScrollY - lastScrollY) > 5) {
+                        setIsScrolled(cachedScrollY > 50);
+                        lastScrollY = cachedScrollY;
                     }
                     ticking = false;
                 });
@@ -56,8 +68,11 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         
+        // Inicializar con requestAnimationFrame para evitar reflow inmediato
         requestAnimationFrame(() => {
-            setIsScrolled(window.scrollY > 50);
+            cachedScrollY = window.scrollY;
+            setIsScrolled(cachedScrollY > 50);
+            lastScrollY = cachedScrollY;
         });
 
         return () => window.removeEventListener('scroll', handleScroll);

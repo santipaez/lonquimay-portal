@@ -1,31 +1,26 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
   Search,
   CreditCard,
   FileText,
   Newspaper,
   Phone,
-  ChevronLeft,
-  ChevronRight,
   MapPin,
-  Mail,
-  Facebook,
-  Instagram,
   CloudSun,
   Wind,
   Droplets,
   ArrowRight,
   Calendar,
-  Pill,
-  Sun
+  Pill
 } from 'lucide-react';
-import Header from './Header';
 import Footer from './Footer';
 import WhatsAppButton from './WhatsAppButton';
 import PagefindSearch from './PagefindSearch';
 import NewsSkeleton from './NewsSkeleton';
-import InteractiveMap from './InteractiveMap';
 import { motion } from 'framer-motion';
+
+// Lazy load componentes pesados que no son críticos para el LCP
+const InteractiveMap = lazy(() => import('./InteractiveMap'));
 
 // --- Interfaces & Types ---
 interface ServiceBtn {
@@ -44,6 +39,21 @@ interface NewsItem {
   category: string;
 }
 
+// Helper para generar srcset de Unsplash optimizado
+const getUnsplashSrcSet = (baseUrl: string): string => {
+  const sizes = [300, 400, 600, 800];
+  return sizes.map(size => {
+    try {
+      const url = new URL(baseUrl);
+      url.searchParams.set('w', size.toString());
+      url.searchParams.set('q', '75');
+      return `${url.toString()} ${size}w`;
+    } catch {
+      return `${baseUrl}?w=${size}&q=75 ${size}w`;
+    }
+  }).join(', ');
+};
+
 // --- Mock Data ---
 const SERVICES: ServiceBtn[] = [
   { icon: CreditCard, label: "Pagos", color: "text-white", bgColor: "bg-[#7bc143]", href: "/pagos" },
@@ -58,21 +68,21 @@ const NEWS: NewsItem[] = [
     category: "Digital",
     title: "Nuevo Portal Digital de Lonquimay",
     snippet: "La Municipalidad de Lonquimay lanza su nuevo portal ciudadano digital, facilitando el acceso a trámites, servicios y información municipal desde cualquier dispositivo...",
-    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75"
   },
   {
     id: 2,
     category: "Obras",
     title: "Planificación Urbana y Hábitat",
     snippet: "Se presentó el nuevo plan de desarrollo urbano que incluye mejoras en infraestructura, espacios verdes y vivienda social para el crecimiento sostenible de la ciudad...",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75"
   },
   {
     id: 3,
     category: "Social",
     title: "Programas de Asistencia y Conservación",
     snippet: "El municipio continúa implementando programas de asistencia social y conservación del medio ambiente, trabajando junto a la comunidad para mejorar la calidad de vida...",
-    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75"
   }
 ];
 
@@ -250,7 +260,7 @@ const WeatherWidget = () => {
 
       <div className="text-center relative z-10">
         <h3 className="text-[#7bc143] font-bold text-xl md:text-2xl mb-1">Lonquimay, AR</h3>
-        <p className="text-gray-400 text-sm mb-6">
+        <p className="text-gray-600 text-sm mb-6">
           {loading ? 'Cargando...' : formatDate()}
         </p>
 
@@ -332,10 +342,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
-
-      {/* --- HEADER --- */}
-      <Header client:load currentPage="Inicio" transparent={true} />
-
       {/* --- HERO SECTION with Left-Aligned Modern Design --- */}
       <section className="relative h-[750px] md:h-[900px] flex items-center pt-20 md:pt-24">
         {/* Video Background */}
@@ -345,9 +351,13 @@ export default function LandingPage() {
             loop
             muted
             playsInline
-            preload="none"
+            preload="metadata"
             className="w-full h-full object-cover"
             style={{ willChange: 'auto' }}
+            onLoadedData={(e) => {
+              // Marcar como cargado para mejorar métricas
+              e.currentTarget.play().catch(() => {});
+            }}
           >
             <source src="/bg-lonqui.mp4" type="video/mp4" />
           </video>
@@ -371,7 +381,7 @@ export default function LandingPage() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-slate-300 mb-10 font-light leading-relaxed max-w-lg lcp-subtitle"
+              className="text-lg md:text-xl text-slate-200 mb-10 font-light leading-relaxed max-w-lg lcp-subtitle"
             >
               Gestión transparente y cercana. Accedé a trámites, servicios y noticias de tu municipio en un solo lugar.
             </p>
@@ -381,9 +391,11 @@ export default function LandingPage() {
               className="bg-white p-2 rounded-full flex flex-row gap-2 w-full max-w-lg relative shadow-2xl lcp-search"
             >
               <div className="flex-1 flex items-center px-3 md:px-4 min-w-0">
-                <Search className="w-5 h-5 text-slate-400 mr-2 md:mr-3 shrink-0" />
+                <Search className="w-5 h-5 text-slate-500 mr-2 md:mr-3 shrink-0" aria-hidden="true" />
                 <div className="flex-1 min-w-0 relative">
-                  <PagefindSearch />
+                  <Suspense fallback={null}>
+                    <PagefindSearch />
+                  </Suspense>
                 </div>
               </div>
               <button
@@ -398,6 +410,7 @@ export default function LandingPage() {
                   }
                 }}
                 className="bg-green-700 hover:bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 text-sm md:text-base"
+                aria-label="Buscar en el portal"
               >
                 Buscar
               </button>
@@ -405,11 +418,11 @@ export default function LandingPage() {
 
             {/* Popular Searches */}
             <div
-              className="mt-8 flex gap-4 text-sm text-slate-400 flex-wrap lcp-popular"
+              className="mt-8 flex gap-4 text-sm text-slate-200 flex-wrap lcp-popular"
             >
               <span>Lo más buscado:</span>
-              <a href="/pagos" className="text-white hover:text-green-400 underline decoration-green-500/50 underline-offset-4 transition-colors">Impuestos</a>
-              <a href="/tramites" className="text-white hover:text-green-400 underline decoration-green-500/50 underline-offset-4 transition-colors">Licencia</a>
+              <a href="/pagos" className="text-white hover:text-green-300 underline decoration-green-400 underline-offset-4 transition-colors" aria-label="Buscar información sobre impuestos">Impuestos</a>
+              <a href="/tramites" className="text-white hover:text-green-300 underline decoration-green-400 underline-offset-4 transition-colors" aria-label="Buscar información sobre licencias">Licencia</a>
             </div>
           </div>
         </div>
@@ -417,22 +430,22 @@ export default function LandingPage() {
         {/* Data Strip integrated */}
         <div className="absolute bottom-0 w-full border-t border-white/10 bg-slate-900/80 backdrop-blur-md z-10">
           <div className="container mx-auto px-3 md:px-6 py-3 md:py-4 flex flex-nowrap justify-between md:justify-between items-center text-sm md:text-sm font-medium tracking-wide overflow-x-auto">
-            <div className="flex items-center gap-2 md:gap-3 text-slate-300 shrink-0">
-              <Calendar className="w-5 h-5 md:w-5 md:h-5 text-green-400 shrink-0" />
-              <span className="uppercase text-xs md:text-xs font-bold tracking-widest text-slate-400 hidden sm:inline">Hoy</span>
-              <span className="text-white text-sm md:text-sm whitespace-nowrap">{new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</span>
+            <div className="flex items-center gap-2 md:gap-3 text-slate-200 shrink-0">
+              <Calendar className="w-5 h-5 md:w-5 md:h-5 text-green-300 shrink-0" aria-hidden="true" />
+              <span className="uppercase text-xs md:text-xs font-bold tracking-widest text-slate-300 hidden sm:inline">Hoy</span>
+              <span className="text-white text-sm md:text-sm whitespace-nowrap" aria-label="Fecha actual">{new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</span>
             </div>
 
             <div className="flex items-center gap-4 md:gap-12 shrink-0">
-              <div className="flex items-center gap-2 md:gap-2 text-slate-300">
-                <Pill className="w-5 h-5 md:w-5 md:h-5 text-green-400 shrink-0" />
+              <div className="flex items-center gap-2 md:gap-2 text-slate-200">
+                <Pill className="w-5 h-5 md:w-5 md:h-5 text-green-300 shrink-0" aria-hidden="true" />
                 <span className="text-sm md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Farmacia: </span><b className="text-white">San José</b></span>
               </div>
 
-              <div className="hidden md:block w-px h-4 bg-white/20 shrink-0"></div>
+              <div className="hidden md:block w-px h-4 bg-white/20 shrink-0" aria-hidden="true"></div>
 
-              <div className="flex items-center gap-2 md:gap-2 text-slate-300 shrink-0">
-                <CloudSun className="w-5 h-5 md:w-5 md:h-5 text-yellow-400 shrink-0" />
+              <div className="flex items-center gap-2 md:gap-2 text-slate-200 shrink-0">
+                <CloudSun className="w-5 h-5 md:w-5 md:h-5 text-yellow-300 shrink-0" aria-hidden="true" />
                 <span className="text-sm md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Clima: </span><b className="text-white">24°C</b></span>
               </div>
             </div>
@@ -459,6 +472,7 @@ export default function LandingPage() {
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
               style={{ willChange: 'transform, opacity' }}
+              aria-label="Ir a la sección de Pagos Online"
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -479,6 +493,7 @@ export default function LandingPage() {
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
               style={{ willChange: 'transform, opacity' }}
+              aria-label="Ir a la Guía de Trámites"
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -499,6 +514,7 @@ export default function LandingPage() {
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
               style={{ willChange: 'transform, opacity' }}
+              aria-label="Ir a la sección de Novedades"
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -519,6 +535,7 @@ export default function LandingPage() {
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
               style={{ willChange: 'transform, opacity' }}
+              aria-label="Ir a la sección de Teléfonos Útiles"
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -540,7 +557,7 @@ export default function LandingPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Noticias Recientes</h2>
               <div className="h-1 w-20 bg-[#7bc143] mt-3 rounded-full"></div>
             </div>
-            <a href="#" className="hidden md:block text-[#7bc143] font-bold hover:underline">Ver todas</a>
+            <a href="/novedades" className="hidden md:block text-[#7bc143] font-bold hover:underline" aria-label="Ver todas las noticias">Ver todas</a>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -562,14 +579,18 @@ export default function LandingPage() {
                     </span>
                     <img
                       src={news.image}
+                      srcSet={getUnsplashSrcSet(news.image)}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       alt={news.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = `https://via.placeholder.com/800x400/7bc143/ffffff?text=${encodeURIComponent(news.title)}`;
+                        target.src = `https://via.placeholder.com/400x200/7bc143/ffffff?text=${encodeURIComponent(news.title)}`;
                       }}
                       loading="lazy"
                       decoding="async"
+                      width={400}
+                      height={200}
                     />
                   </div>
                   <div className="p-6">
@@ -585,23 +606,31 @@ export default function LandingPage() {
             )}
           </div>
           <div className="mt-8 text-center md:hidden">
-            <button className="text-[#7bc143] font-bold">Ver todas las noticias</button>
+            <a href="/novedades" className="text-[#7bc143] font-bold hover:underline inline-block" aria-label="Ver todas las noticias">Ver todas las noticias</a>
           </div>
         </div>
       </section>
 
       {/* --- INTERACTIVE MAP --- */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white" aria-labelledby="mapa-titulo">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <InteractiveMap client:visible="react" height="500px" showTitle={true} />
+            <h2 id="mapa-titulo" className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">Mapa Interactivo</h2>
+            <Suspense fallback={
+              <div className="h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="text-gray-600">Cargando mapa...</div>
+              </div>
+            }>
+              <InteractiveMap height="500px" showTitle={false} />
+            </Suspense>
             <div className="mt-8 text-center">
               <a
                 href="/mapa"
                 className="inline-flex items-center gap-2 text-[#7bc143] font-bold hover:underline"
+                aria-label="Ver mapa completo de Lonquimay"
               >
                 Ver mapa completo
-                <ArrowRight size={16} />
+                <ArrowRight size={16} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -622,14 +651,14 @@ export default function LandingPage() {
               </p>
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                  <MapPin className="text-[#7bc143] mb-2" />
-                  <h4 className="font-bold">Ubicación</h4>
-                  <p className="text-sm text-gray-500">Ruta Nacional 5</p>
+                  <MapPin className="text-[#7bc143] mb-2" aria-hidden="true" />
+                  <h3 className="font-bold text-lg">Ubicación</h3>
+                  <p className="text-sm text-gray-600">Ruta Nacional 5</p>
                 </div>
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                  <Wind className="text-[#4a9bb7] mb-2" />
-                  <h4 className="font-bold">Cuna de la Tradición</h4>
-                  <p className="text-sm text-gray-500">Cultura y Raíces</p>
+                  <Wind className="text-[#4a9bb7] mb-2" aria-hidden="true" />
+                  <h3 className="font-bold text-lg">Cuna de la Tradición</h3>
+                  <p className="text-sm text-gray-600">Cultura y Raíces</p>
                 </div>
               </div>
             </div>
@@ -638,10 +667,14 @@ export default function LandingPage() {
       </section>
 
       {/* --- FOOTER --- */}
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
 
       {/* --- WHATSAPP BUTTON --- */}
-      <WhatsAppButton />
+      <Suspense fallback={null}>
+        <WhatsAppButton />
+      </Suspense>
     </div>
   );
 }
