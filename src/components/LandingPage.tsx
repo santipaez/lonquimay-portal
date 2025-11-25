@@ -13,14 +13,15 @@ import {
   Calendar,
   Pill
 } from 'lucide-react';
-import Footer from './Footer';
+
+// Lazy load componentes pesados que no son críticos para el LCP
+const Footer = lazy(() => import('./Footer'));
+const InteractiveMap = lazy(() => import('./InteractiveMap'));
 import WhatsAppButton from './WhatsAppButton';
 import PagefindSearch from './PagefindSearch';
 import NewsSkeleton from './NewsSkeleton';
 import { motion } from 'framer-motion';
 
-// Lazy load componentes pesados que no son críticos para el LCP
-const InteractiveMap = lazy(() => import('./InteractiveMap'));
 
 // --- Interfaces & Types ---
 interface ServiceBtn {
@@ -39,17 +40,17 @@ interface NewsItem {
   category: string;
 }
 
-// Helper para generar srcset de Unsplash optimizado
+// Helper para generar srcset de Unsplash optimizado - Tamaños ajustados para mobile
 const getUnsplashSrcSet = (baseUrl: string): string => {
-  const sizes = [300, 400, 600, 800];
+  const sizes = [300, 400, 500, 600];
   return sizes.map(size => {
     try {
       const url = new URL(baseUrl);
       url.searchParams.set('w', size.toString());
-      url.searchParams.set('q', '75');
+      url.searchParams.set('q', '70');
       return `${url.toString()} ${size}w`;
     } catch {
-      return `${baseUrl}?w=${size}&q=75 ${size}w`;
+      return `${baseUrl}?w=${size}&q=70 ${size}w`;
     }
   }).join(', ');
 };
@@ -68,21 +69,21 @@ const NEWS: NewsItem[] = [
     category: "Digital",
     title: "Nuevo Portal Digital de Lonquimay",
     snippet: "La Municipalidad de Lonquimay lanza su nuevo portal ciudadano digital, facilitando el acceso a trámites, servicios y información municipal desde cualquier dispositivo...",
-    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75"
+    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=70"
   },
   {
     id: 2,
     category: "Obras",
     title: "Planificación Urbana y Hábitat",
     snippet: "Se presentó el nuevo plan de desarrollo urbano que incluye mejoras en infraestructura, espacios verdes y vivienda social para el crecimiento sostenible de la ciudad...",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75"
+    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=70"
   },
   {
     id: 3,
     category: "Social",
     title: "Programas de Asistencia y Conservación",
     snippet: "El municipio continúa implementando programas de asistencia social y conservación del medio ambiente, trabajando junto a la comunidad para mejorar la calidad de vida...",
-    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75"
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=70"
   }
 ];
 
@@ -220,15 +221,24 @@ const WeatherWidget = () => {
     };
   }, []);
 
-  const formatDate = (timestamp?: string) => {
-    if (!timestamp) {
-      const now = new Date();
-      return now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ', ' +
-             now.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+  const formatDate = (timestamp?: string): string => {
+    try {
+      if (!timestamp) {
+        const now = new Date();
+        const time = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        const date = now.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+        return `${time || ''}, ${date || ''}`;
+      }
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) {
+        return new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+      const time = date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      const dateStr = date.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+      return `${time || ''}, ${dateStr || ''}`;
+    } catch (error) {
+      return new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
     }
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ', ' +
-           date.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   const getWeatherIcon = (iconType: string) => {
@@ -288,26 +298,26 @@ const WeatherWidget = () => {
                 {getWeatherIcon(weatherData.icon)}
               </motion.div>
               <span className="text-6xl font-bold text-[#7bc143]">
-                {weatherData.temperature}
+                {String(weatherData.temperature ?? '--')}
                 <span className="text-3xl align-top">°C</span>
               </span>
             </div>
 
             <p className="text-gray-500 font-medium mb-6 capitalize">
-              {weatherData.description}
+              {String(weatherData.description || '')}
             </p>
 
             <div className="flex justify-between text-gray-400 text-xs md:text-sm px-4">
               <div className="flex flex-col items-center gap-1">
-                <span className="font-semibold text-gray-600">{weatherData.humidity} %</span>
+                <span className="font-semibold text-gray-600">{String(weatherData.humidity ?? '--')} %</span>
                 <span>Humedad</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="font-semibold text-gray-600">{weatherData.pressure} mb</span>
+                <span className="font-semibold text-gray-600">{String(weatherData.pressure ?? '--')} mb</span>
                 <span>Presión</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="font-semibold text-gray-600">{weatherData.windSpeed} km/h</span>
+                <span className="font-semibold text-gray-600">{String(weatherData.windSpeed ?? '--')} km/h</span>
                 <span>Viento</span>
               </div>
             </div>
@@ -358,9 +368,20 @@ export default function LandingPage() {
               // Marcar como cargado para mejorar métricas
               e.currentTarget.play().catch(() => {});
             }}
+            onError={(e) => {
+              // Si el video falla, ocultarlo y mostrar solo el fondo
+              const video = e.currentTarget;
+              video.style.display = 'none';
+              const fallback = video.parentElement?.querySelector('.video-fallback');
+              if (fallback) {
+                (fallback as HTMLElement).style.display = 'block';
+              }
+            }}
           >
             <source src="/bg-lonqui.mp4" type="video/mp4" />
           </video>
+          {/* Fallback si el video no carga */}
+          <div className="video-fallback absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900" style={{ display: 'none' }}></div>
           <div className="absolute inset-0 bg-linear-to-r from-slate-900/90 via-slate-900/40 to-transparent"></div>
           <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-black/70 to-transparent pointer-events-none"></div>
         </div>
@@ -433,7 +454,15 @@ export default function LandingPage() {
             <div className="flex items-center gap-2 md:gap-3 text-slate-200 shrink-0">
               <Calendar className="w-5 h-5 md:w-5 md:h-5 text-green-300 shrink-0" aria-hidden="true" />
               <span className="uppercase text-xs md:text-xs font-bold tracking-widest text-slate-300 hidden sm:inline">Hoy</span>
-              <span className="text-white text-sm md:text-sm whitespace-nowrap" aria-label="Fecha actual">{new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</span>
+              <span className="text-white text-sm md:text-sm whitespace-nowrap" aria-label="Fecha actual">
+                {(() => {
+                  try {
+                    return new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' }) || '';
+                  } catch {
+                    return new Date().toLocaleDateString('es-AR') || '';
+                  }
+                })()}
+              </span>
             </div>
 
             <div className="flex items-center gap-4 md:gap-12 shrink-0">
@@ -580,7 +609,7 @@ export default function LandingPage() {
                     <img
                       src={news.image}
                       srcSet={getUnsplashSrcSet(news.image)}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
                       alt={news.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {

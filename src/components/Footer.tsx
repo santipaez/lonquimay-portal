@@ -44,13 +44,35 @@ export default function Footer() {
                                 </span>
                             </div>
                         </div>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-md">
+                        <p className="text-slate-300 text-sm leading-relaxed mb-6 max-w-md">
                             Trabajando juntos por el desarrollo y bienestar de nuestra comunidad. Un gobierno abierto y cercano a la gente.
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="bg-white/20 p-2 rounded-full hover:bg-white hover:text-[#7bc143] transition-colors"><Facebook size={20} /></a>
-                            <a href="#" className="bg-white/20 p-2 rounded-full hover:bg-white hover:text-[#7bc143] transition-colors"><Instagram size={20} /></a>
-                            <a href="mailto:info@lonquimay.gob.ar" className="bg-white/20 p-2 rounded-full hover:bg-white hover:text-[#7bc143] transition-colors"><Mail size={20} /></a>
+                            <a 
+                                href="https://www.facebook.com/municipalidadlonquimay" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="bg-white/20 p-2 rounded-full hover:bg-white hover:text-[#7bc143] transition-colors"
+                                aria-label="Seguir a Municipalidad de Lonquimay en Facebook"
+                            >
+                                <Facebook size={20} aria-hidden="true" />
+                            </a>
+                            <a 
+                                href="https://www.instagram.com/municipalidadlonquimay" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="bg-white/20 p-2 rounded-full hover:bg-white hover:text-[#7bc143] transition-colors"
+                                aria-label="Seguir a Municipalidad de Lonquimay en Instagram"
+                            >
+                                <Instagram size={20} aria-hidden="true" />
+                            </a>
+                            <a 
+                                href="mailto:info@lonquimay.gob.ar" 
+                                className="bg-white/20 p-2 rounded-full hover:bg-white hover:text-[#7bc143] transition-colors"
+                                aria-label="Enviar correo electrónico a info@lonquimay.gob.ar"
+                            >
+                                <Mail size={20} aria-hidden="true" />
+                            </a>
                         </div>
                     </div>
 
@@ -59,7 +81,7 @@ export default function Footer() {
                         <h4 className="font-bold mb-6 tracking-wider text-white border-b border-[#7bc143] inline-block pb-1">
                             CONTACTO ÚTIL
                         </h4>
-                        <ul className="space-y-4 text-slate-400 text-sm">
+                        <ul className="space-y-4 text-slate-300 text-sm">
                             <li className="flex items-start gap-3">
                                 <MapPin className="shrink-0 mt-1" size={18} />
                                 <span>Pedro Bordarampé N°488,<br />CP: 6352, Lonquimay, La Pampa</span>
@@ -80,7 +102,7 @@ export default function Footer() {
                         <h4 className="font-bold mb-6 tracking-wider text-white border-b border-[#7bc143] inline-block pb-1">
                             ENLACES
                         </h4>
-                        <ul className="space-y-3 text-slate-400 text-sm">
+                        <ul className="space-y-3 text-slate-300 text-sm">
                             <li><a href="/el-municipio" className="hover:text-[#7bc143] transition-colors">El Municipio</a></li>
                             <li><a href="/tramites" className="hover:text-[#7bc143] transition-colors">Guía de Trámites</a></li>
                             <li><a href="/servicios" className="hover:text-[#7bc143] transition-colors">Servicios</a></li>
@@ -104,7 +126,7 @@ export default function Footer() {
                 </div>
 
                 {/* Copyright */}
-                <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-400">
+                <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-300">
                     <p>© {currentYear} Municipalidad de Lonquimay. Todos los derechos reservados.</p>
                 </div>
 

@@ -118,8 +118,9 @@ const NEWS = [
                                             {news.snippet}
                                         </p>
                                         <a
-                                            href="#"
+                                            href={`/novedades#noticia-${news.id}`}
                                             class="inline-flex items-center gap-2 text-[#7bc143] font-semibold text-sm hover:gap-3 transition-all"
+                                            aria-label={`Leer más sobre ${news.title}`}
                                         >
                                             Leer más
                                             <svg

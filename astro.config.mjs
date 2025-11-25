@@ -17,6 +17,19 @@ export default defineConfig({
         '.ngrok.app'
       ]
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom'],
+            'vendor-motion': ['framer-motion'],
+            'vendor-icons': ['lucide-react'],
+            'vendor-map': ['leaflet']
+          }
+        }
+      },
+      chunkSizeWarningLimit: 1000
+    },
     plugins: [
       tailwindcss(),
       VitePWA({
