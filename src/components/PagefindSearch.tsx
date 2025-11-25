@@ -3,15 +3,15 @@ import { Search, X } from 'lucide-react';
 
 // Páginas y contenido buscable
 const SEARCHABLE_PAGES = [
-  { url: '/', title: 'Inicio', keywords: 'inicio, home, portal, principal' },
-  { url: '/el-municipio', title: 'El Municipio', keywords: 'municipio, gobierno, administración, municipalidad' },
-  { url: '/tramites', title: 'Guía de Trámites', keywords: 'trámites, requisitos, documentos, guía, procedimientos' },
-  { url: '/servicios', title: 'Servicios', keywords: 'servicios, municipal, atención, oficinas' },
-  { url: '/novedades', title: 'Novedades', keywords: 'noticias, novedades, actualidad, eventos' },
-  { url: '/pagos', title: 'Pagos', keywords: 'pagos, impuestos, tasas, tributos, facturas' },
-  { url: '/numeros-utiles', title: 'Números Útiles', keywords: 'emergencias, teléfonos, bomberos, policía, hospital' },
-  { url: '/mapa', title: 'Mapa', keywords: 'mapa, ubicación, direcciones, geolocalización' },
-  { url: '/contacto', title: 'Contacto', keywords: 'contacto, email, teléfono, dirección, comunicarse' },
+  { url: '/', title: 'Inicio', description: 'Portal principal del municipio', keywords: 'inicio, home, portal, principal' },
+  { url: '/el-municipio', title: 'El Municipio', description: 'Información sobre la administración municipal', keywords: 'municipio, gobierno, administración, municipalidad' },
+  { url: '/tramites', title: 'Guía de Trámites', description: 'Consulta requisitos y documentación necesaria', keywords: 'trámites, requisitos, documentos, guía, procedimientos, licencia, habilitación' },
+  { url: '/servicios', title: 'Servicios', description: 'Servicios municipales disponibles para vecinos', keywords: 'servicios, municipal, atención, oficinas' },
+  { url: '/novedades', title: 'Novedades', description: 'Últimas noticias y comunicados oficiales', keywords: 'noticias, novedades, actualidad, eventos' },
+  { url: '/pagos', title: 'Pagos Online', description: 'Consulta y paga tus tasas municipales e impuestos', keywords: 'pagos, impuestos, tasas, tributos, facturas, deuda' },
+  { url: '/numeros-utiles', title: 'Números Útiles', description: 'Teléfonos de emergencia y servicios esenciales', keywords: 'emergencias, teléfonos, bomberos, policía, hospital' },
+  { url: '/mapa', title: 'Mapa Interactivo', description: 'Ubicación de servicios y puntos de interés', keywords: 'mapa, ubicación, direcciones, geolocalización' },
+  { url: '/contacto', title: 'Contacto', description: 'Información de contacto y oficinas municipales', keywords: 'contacto, email, teléfono, dirección, comunicarse' },
 ];
 
 export default function PagefindSearch() {
@@ -58,7 +58,8 @@ export default function PagefindSearch() {
             return {
               url: data.url,
               title: data.meta?.title || data.url,
-              excerpt: data.excerpt || ''
+              description: data.excerpt ? data.excerpt.replace(/<[^>]*>/g, '').trim().substring(0, 100) : '',
+              excerpt: data.excerpt ? data.excerpt.replace(/<[^>]*>/g, '').trim() : ''
             };
           })
         );
@@ -81,12 +82,12 @@ export default function PagefindSearch() {
     const filtered = SEARCHABLE_PAGES.filter(page => {
       const titleMatch = page.title.toLowerCase().includes(searchLower);
       const keywordMatch = page.keywords.toLowerCase().includes(searchLower);
-      const urlMatch = page.url.toLowerCase().includes(searchLower);
-      return titleMatch || keywordMatch || urlMatch;
+      const descriptionMatch = page.description?.toLowerCase().includes(searchLower);
+      return titleMatch || keywordMatch || descriptionMatch;
     }).map(page => ({
       url: page.url,
       title: page.title,
-      excerpt: `Página: ${page.title}`
+      description: page.description || ''
     }));
     
     setResults(filtered.slice(0, 8));
@@ -111,15 +112,11 @@ export default function PagefindSearch() {
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="Buscar trámites, servicios, información..."
+            placeholder="Buscar trámite o servicio..."
             value={query}
             onChange={handleInputChange}
             onFocus={() => setIsOpen(true)}
-            className="w-full bg-gray-100 rounded-xl py-3 px-4 pl-12 pr-12 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#7bc143] transition-all"
-          />
-          <Search 
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" 
-            size={20} 
+            className="w-full bg-transparent outline-none text-slate-700 placeholder-slate-400 text-sm md:text-base focus:outline-none transition-all"
           />
           {query && (
             <button
@@ -128,7 +125,7 @@ export default function PagefindSearch() {
                 setResults([]);
                 searchInputRef.current?.focus();
               }}
-              className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
             >
               <X size={18} />
             </button>
@@ -137,45 +134,52 @@ export default function PagefindSearch() {
 
         {/* Resultados */}
         {isOpen && (
-          <div className="absolute top-full left-4 right-4 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto z-50">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700/50 max-h-96 overflow-y-auto z-[100]">
             {isLoading && (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-slate-300">
                 <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#7bc143]"></div>
                 <p className="mt-2 text-sm">Buscando...</p>
               </div>
             )}
 
             {!isLoading && query && results.length === 0 && (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-slate-300">
                 <p className="text-sm">No se encontraron resultados para "{query}"</p>
               </div>
             )}
 
             {!isLoading && !query && (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-slate-300">
                 <p className="text-sm">Escribe para buscar...</p>
               </div>
             )}
 
             {!isLoading && results.length > 0 && (
               <div className="py-2">
+                <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                  Resultados ({results.length})
+                </div>
                 {results.map((result, index) => (
                   <button
                     key={index}
                     onClick={() => handleResultClick(result.url)}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                    className="w-full text-left px-4 py-4 hover:bg-slate-700/50 transition-colors border-b border-slate-700/50 last:border-b-0 group"
                   >
-                    <h4 className="font-semibold text-gray-800 mb-1 text-sm">
-                      {result.title}
-                    </h4>
-                    {result.excerpt && (
-                      <p className="text-xs text-gray-600 line-clamp-2">
-                        {result.excerpt}
-                      </p>
-                    )}
-                    <p className="text-xs text-[#7bc143] mt-1">
-                      {result.url}
-                    </p>
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className="w-2 h-2 rounded-full bg-[#7bc143] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-white mb-1 text-base group-hover:text-[#7bc143] transition-colors">
+                          {result.title}
+                        </h4>
+                        {(result.description || result.excerpt) && (
+                          <p className="text-sm text-slate-300 leading-relaxed">
+                            {result.description || result.excerpt}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>

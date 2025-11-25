@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Building2, Hospital, Pill, Shield, CreditCard } from 'lucide-react';
 
 interface MapPoint {
   id: string;
@@ -149,15 +150,45 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
         // Coordenadas de Lonquimay, La Pampa
         const lonquimayCenter: [number, number] = [-36.4642, -63.6244];
 
+        // Función para crear iconos SVG personalizados (basados en lucide-react)
+        const getIconSVG = (iconType: MapPoint['icon']): string => {
+          const icons = {
+            municipalidad: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M9 22v-4h6v4"/>
+              <path d="M8 6h8M8 10h8M8 14h8M8 18h8"/>
+            </svg>`,
+            hospital: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21h-4a2 2 0 0 1-2-2v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2z"/>
+              <line x1="12" y1="11" x2="12" y2="15"/>
+              <line x1="10" y1="13" x2="14" y2="13"/>
+            </svg>`,
+            farmacia: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <line x1="12" y1="6" x2="12" y2="22"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+              <circle cx="12" cy="12" r="3" fill="currentColor"/>
+            </svg>`,
+            policia: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+              <circle cx="12" cy="12" r="3" fill="currentColor"/>
+            </svg>`,
+            cajero: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+              <line x1="7" y1="8" x2="7.01" y2="8"/>
+              <line x1="11" y1="8" x2="13" y2="8"/>
+              <line x1="17" y1="8" x2="17.01" y2="8"/>
+              <line x1="7" y1="12" x2="17" y2="12"/>
+            </svg>`
+          };
+          
+          return icons[iconType] || icons.municipalidad;
+        };
+
         // Función para crear iconos personalizados (dentro del useEffect para tener acceso a L)
         const createCustomIcon = (color: string, iconType: MapPoint['icon']) => {
-          const iconMap = {
-            municipalidad: '🏛️',
-            hospital: '🏥',
-            farmacia: '💊',
-            policia: '🚔',
-            cajero: '🏧'
-          };
+          const iconSVG = getIconSVG(iconType);
 
           return Leaflet.divIcon({
             className: 'custom-marker',
@@ -170,11 +201,19 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 20px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
                 border: 3px solid white;
               ">
-                ${iconMap[iconType]}
+                <div style="
+                  color: white;
+                  width: 24px;
+                  height: 24px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                ">
+                  ${iconSVG}
+                </div>
               </div>
             `,
             iconSize: [40, 40],
@@ -307,12 +346,22 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
       {/* Leyenda */}
       <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
         {MAP_POINTS.map((point) => {
-          const iconMap = {
-            municipalidad: '🏛️',
-            hospital: '🏥',
-            farmacia: '💊',
-            policia: '🚔',
-            cajero: '🏧'
+          const getLegendIcon = () => {
+            const iconProps = { size: 20, className: "flex-shrink-0" };
+            switch (point.icon) {
+              case 'municipalidad':
+                return <Building2 {...iconProps} style={{ color: point.color }} />;
+              case 'hospital':
+                return <Hospital {...iconProps} style={{ color: point.color }} />;
+              case 'farmacia':
+                return <Pill {...iconProps} style={{ color: point.color }} />;
+              case 'policia':
+                return <Shield {...iconProps} style={{ color: point.color }} />;
+              case 'cajero':
+                return <CreditCard {...iconProps} style={{ color: point.color }} />;
+              default:
+                return null;
+            }
           };
           
           return (
@@ -320,7 +369,7 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
               key={point.id}
               className="flex items-center gap-2 bg-white p-3 rounded-lg shadow-sm border border-gray-100"
             >
-              <span className="text-2xl">{iconMap[point.icon]}</span>
+              {getLegendIcon()}
               <span className="text-sm font-semibold text-gray-700">{point.name}</span>
             </div>
           );

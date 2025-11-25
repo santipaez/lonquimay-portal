@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Logo = () => (
-    <div className="flex items-center gap-3">
+const Logo = ({ isSolid }: { isSolid: boolean }) => (
+    <div className="flex items-center gap-2">
         <img
             src="/logo-lonquimay.png"
             alt="Logo Lonquimay"
-            className="h-8 md:h-10 w-auto object-contain"
+            className="h-7 md:h-9 w-auto object-contain"
         />
         <div className="flex flex-col" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            <span className="text-gray-600 text-[10px] md:text-xs font-normal uppercase tracking-wide leading-tight">
+            <span className={`text-[10px] md:text-xs font-normal uppercase tracking-wide leading-tight transition-colors ${
+                isSolid ? 'text-gray-600' : 'text-white'
+            }`}>
                 MUNICIPALIDAD DE
             </span>
-            <span className="text-[#7bc143] text-lg md:text-xl font-bold uppercase tracking-wide leading-tight">
+            <span className="text-[#7bc143] text-base md:text-lg font-bold uppercase tracking-wide leading-tight">
                 LONQUIMAY
             </span>
         </div>
@@ -22,10 +24,31 @@ const Logo = () => (
 
 interface HeaderProps {
     currentPage?: string;
+    transparent?: boolean; // Si es true, el header es transparente (para home), si es false, siempre sólido (para páginas internas)
 }
 
-export default function Header({ currentPage = 'Inicio' }: HeaderProps) {
+export default function Header({ currentPage = 'Inicio', transparent = false }: HeaderProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        // Solo escuchar el scroll si el header puede ser transparente
+        if (!transparent) {
+            // En páginas internas, siempre está sólido
+            setIsScrolled(true);
+            return;
+        }
+
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            setIsScrolled(scrollPosition > 50);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Check initial position
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [transparent]);
 
     const menuItems = [
         { label: 'Inicio', href: '/' },
@@ -37,11 +60,21 @@ export default function Header({ currentPage = 'Inicio' }: HeaderProps) {
         { label: 'Contacto', href: '/contacto' }
     ];
 
+    // Determinar si el header debe estar sólido o transparente
+    const shouldBeSolid = transparent ? isScrolled : true; // Si transparent=false, siempre sólido
+
     return (
-        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100" data-astro-transition-persist>
-            <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+        <header 
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+                shouldBeSolid
+                    ? 'bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100' 
+                    : 'bg-transparent shadow-none border-b border-transparent'
+            }`} 
+            data-astro-transition-persist
+        >
+            <div className="container mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between py-2">
                 <a href="/">
-                    <Logo />
+                    <Logo isSolid={shouldBeSolid} />
                 </a>
 
                 {/* Desktop Nav */}
@@ -50,10 +83,13 @@ export default function Header({ currentPage = 'Inicio' }: HeaderProps) {
                         <a
                             key={item.label}
                             href={item.href}
-                            className={`font-medium transition-colors text-sm uppercase tracking-wide ${currentPage === item.label
+                            className={`font-medium transition-colors text-sm uppercase tracking-wide ${
+                                currentPage === item.label
                                     ? 'text-[#7bc143] font-bold'
-                                    : 'text-gray-600 hover:text-[#7bc143]'
-                                }`}
+                                    : shouldBeSolid
+                                        ? 'text-gray-600 hover:text-[#7bc143]'
+                                        : 'text-white hover:text-green-300'
+                            }`}
                         >
                             {item.label}
                         </a>
@@ -62,7 +98,9 @@ export default function Header({ currentPage = 'Inicio' }: HeaderProps) {
 
                 {/* Mobile Menu Toggle */}
                 <button
-                    className="md:hidden text-gray-600 p-2"
+                    className={`md:hidden p-2 transition-colors ${
+                        shouldBeSolid ? 'text-gray-600' : 'text-white'
+                    }`}
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                     {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
