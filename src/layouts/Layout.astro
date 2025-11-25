@@ -6,7 +6,7 @@ interface Props {
 	description?: string;
 }
 
-const { title, description = "Portal oficial de la Municipalidad de Lonquimay, La Pampa. Acceso a trámites, requisitos, noticias y servicios municipales." } = Astro.props;
+const { title, description = "Sitio oficial de la Municipalidad de Lonquimay, La Pampa. Acceso a trámites, requisitos, noticias y servicios municipales." } = Astro.props;
 const siteUrl = import.meta.env.SITE || "https://lonquimay.gob.ar";
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
 const ogImage = new URL("/logo-lonquimay.png", siteUrl).href;
@@ -70,7 +70,7 @@ const ogImage = new URL("/logo-lonquimay.png", siteUrl).href;
 			<script src="/_pagefind/pagefind.js" type="module"></script>
 		)}
 	</head>
-	<body>
+	<body class="m-0 p-0">
 		<slot />
 		
 		<!-- AOS (Animate On Scroll) -->

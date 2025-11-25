@@ -2,7 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { CreditCard, Clock, CheckCircle, MessageCircle, Copy, Check } from "lucide-react";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { CreditCard, Clock, CheckCircle, MessageCircle, Copy, Check, Lightbulb } from "lucide-react";
 import "../styles/global.css";
 ---
 
@@ -12,12 +13,17 @@ import "../styles/global.css";
 >
 	<Header client:load currentPage="Pagos" />
 
-        <main class="min-h-screen bg-gray-50">
+        <main class="min-h-screen bg-gray-50 pt-16 md:pt-20">
             {/* Hero Section */}
             <section
                 class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16 md:py-24"
             >
                 <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+                    <Breadcrumb 
+                        items={[
+                            { label: 'Información de Pagos', href: '#' }
+                        ]} 
+                    />
                     <div class="flex items-center gap-4 mb-4">
                         <CreditCard class="w-12 h-12 md:w-16 md:h-16" />
                         <h1 class="text-4xl md:text-5xl font-bold">
@@ -160,7 +166,10 @@ import "../styles/global.css";
 
                     {/* Información Adicional */}
                     <div class="bg-blue-50 rounded-2xl p-8 border border-blue-100">
-                        <h3 class="font-bold text-gray-800 mb-4 text-lg">💡 Consejos</h3>
+                        <h3 class="font-bold text-gray-800 mb-4 text-lg flex items-center gap-2">
+                            <Lightbulb class="w-5 h-5 text-blue-600" />
+                            Consejos
+                        </h3>
                         <ul class="space-y-2 text-gray-700">
                             <li class="flex items-start gap-2">
                                 <span class="text-[#7bc143] mt-1">•</span>
