@@ -72,6 +72,14 @@ src/
 
 ---
 
+## 📸 Visual Highlights
+
+| Section | Preview |
+| ------- | ------- |
+| Hero & Search | ![Hero Preview](/public/hero-preview.png) |
+
+---
+
 ## 🌐 Deployment Checklist
 
 - [ ] Update canonical domain in `src/layouts/Layout.astro`
