@@ -24,7 +24,7 @@ const MAP_POINTS: MapPoint[] = [
     lng: -63.6244,
     description: 'Edificio Municipal - Sector Rentas y Administración',
     icon: 'municipalidad',
-    color: '#7bc143'
+    color: '#5a9f35'
   },
   {
     id: 'hospital',
@@ -336,7 +336,7 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           <p className="text-gray-600">
             Ubicaciones de los puntos clave del pueblo
           </p>
-          <div className="h-1 w-20 bg-[#7bc143] mx-auto mt-3 rounded-full"></div>
+          <div className="h-1 w-20 bg-[#5a9f35] mx-auto mt-3 rounded-full"></div>
         </div>
       )}
       
@@ -344,9 +344,9 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
         {showLoading && (
           <div 
             style={{ height, width: '100%', position: 'absolute', top: 0, left: 0, zIndex: 2 }}
-            className="rounded-2xl shadow-lg border border-gray-200 bg-gray-200 animate-pulse flex items-center justify-center"
+            className="rounded-2xl shadow-lg border border-gray-200 bg-gray-100 animate-pulse flex items-center justify-center"
           >
-            <p className="text-gray-500">Cargando mapa...</p>
+            <p className="text-gray-700">Cargando mapa...</p>
           </div>
         )}
         <div 

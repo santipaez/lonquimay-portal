@@ -57,10 +57,10 @@ const getUnsplashSrcSet = (baseUrl: string): string => {
 
 // --- Mock Data ---
 const SERVICES: ServiceBtn[] = [
-  { icon: CreditCard, label: "Pagos", color: "text-white", bgColor: "bg-[#7bc143]", href: "/pagos" },
-  { icon: FileText, label: "Trámites", color: "text-white", bgColor: "bg-[#7bc143]", href: "/tramites" },
-  { icon: Newspaper, label: "Noticias", color: "text-white", bgColor: "bg-[#7bc143]", href: "/novedades" },
-  { icon: Phone, label: "Números Útiles", color: "text-white", bgColor: "bg-[#7bc143]", href: "/numeros-utiles" },
+  { icon: CreditCard, label: "Pagos", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/pagos" },
+  { icon: FileText, label: "Trámites", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/tramites" },
+  { icon: Newspaper, label: "Noticias", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/novedades" },
+  { icon: Phone, label: "Números Útiles", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/numeros-utiles" },
 ];
 
 const NEWS: NewsItem[] = [
@@ -222,6 +222,7 @@ const WeatherWidget = () => {
   }, []);
 
   const formatDate = (timestamp?: string): string => {
+    if (typeof window === 'undefined') return '';
     try {
       if (!timestamp) {
         const now = new Date();
@@ -269,7 +270,7 @@ const WeatherWidget = () => {
       <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-100 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
 
       <div className="text-center relative z-10">
-        <h3 className="text-[#7bc143] font-bold text-xl md:text-2xl mb-1">Lonquimay, AR</h3>
+        <h3 className="text-[#5a9f35] font-bold text-xl md:text-2xl mb-1">Lonquimay, AR</h3>
         <p className="text-gray-600 text-sm mb-6">
           {loading ? 'Cargando...' : formatDate()}
         </p>
@@ -297,13 +298,13 @@ const WeatherWidget = () => {
               >
                 {getWeatherIcon(weatherData.icon)}
               </motion.div>
-              <span className="text-6xl font-bold text-[#7bc143]">
+              <span className="text-6xl font-bold text-[#5a9f35]">
                 {String(weatherData.temperature ?? '--')}
                 <span className="text-3xl align-top">°C</span>
               </span>
             </div>
 
-            <p className="text-gray-500 font-medium mb-6 capitalize">
+            <p className="text-gray-600 font-medium mb-6 capitalize">
               {String(weatherData.description || '')}
             </p>
 
@@ -332,6 +333,8 @@ export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [newsLoading, setNewsLoading] = React.useState(true);
   const [newsData, setNewsData] = React.useState<NewsItem[]>([]);
+  const [currentDate, setCurrentDate] = React.useState<string>('');
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   // For hero carousel dots (if adding multiple videos/images later)
   const heroSlides = 1; // Currently just one video
@@ -350,6 +353,36 @@ export default function LandingPage() {
     loadNews();
   }, []);
 
+  // Actualizar fecha solo en el cliente para evitar problemas de hidratación
+  React.useEffect(() => {
+    try {
+      const dateStr = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
+      setCurrentDate(dateStr || '');
+    } catch {
+      setCurrentDate(new Date().toLocaleDateString('es-AR') || '');
+    }
+  }, []);
+
+  // Cargar video solo cuando sea visible
+  React.useEffect(() => {
+    if (!videoRef.current || typeof window === 'undefined') return;
+
+    const video = videoRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && video.readyState === 0) {
+            video.load();
+          }
+        });
+      },
+      { rootMargin: '50px' }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
       {/* --- HERO SECTION with Left-Aligned Modern Design --- */}
@@ -357,23 +390,23 @@ export default function LandingPage() {
         {/* Video Background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="none"
             className="w-full h-full object-cover"
             style={{ willChange: 'auto' }}
             onLoadedData={(e) => {
-              // Marcar como cargado para mejorar métricas
               e.currentTarget.play().catch(() => {});
             }}
             onError={(e) => {
-              // Si el video falla, ocultarlo y mostrar solo el fondo
               const video = e.currentTarget;
               video.style.display = 'none';
               const fallback = video.parentElement?.querySelector('.video-fallback');
               if (fallback) {
+                (fallback as HTMLElement).classList.remove('hidden');
                 (fallback as HTMLElement).style.display = 'block';
               }
             }}
@@ -381,9 +414,9 @@ export default function LandingPage() {
             <source src="/bg-lonqui.mp4" type="video/mp4" />
           </video>
           {/* Fallback si el video no carga */}
-          <div className="video-fallback absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900" style={{ display: 'none' }}></div>
-          <div className="absolute inset-0 bg-linear-to-r from-slate-900/90 via-slate-900/40 to-transparent"></div>
-          <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-b from-black/70 to-transparent pointer-events-none"></div>
+          <div className="video-fallback absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hidden"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-transparent"></div>
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/70 to-transparent pointer-events-none"></div>
         </div>
 
         {/* Content */}
@@ -395,7 +428,7 @@ export default function LandingPage() {
               style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               <span className="font-light">Bienvenido a</span> <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-300 font-extrabold uppercase tracking-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 font-extrabold uppercase tracking-tight">
                 LONQUIMAY
               </span>
             </h1>
@@ -454,15 +487,9 @@ export default function LandingPage() {
             <div className="flex items-center gap-2 md:gap-3 text-slate-200 shrink-0">
               <Calendar className="w-5 h-5 md:w-5 md:h-5 text-green-300 shrink-0" aria-hidden="true" />
               <span className="uppercase text-xs md:text-xs font-bold tracking-widest text-slate-300 hidden sm:inline">Hoy</span>
-              <span className="text-white text-sm md:text-sm whitespace-nowrap" aria-label="Fecha actual">
-                {(() => {
-                  try {
-                    return new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' }) || '';
-                  } catch {
-                    return new Date().toLocaleDateString('es-AR') || '';
-                  }
-                })()}
-              </span>
+                <time dateTime={new Date().toISOString()} className="text-white text-sm md:text-sm whitespace-nowrap" aria-label="Fecha actual">
+                {currentDate}
+              </time>
             </div>
 
             <div className="flex items-center gap-4 md:gap-12 shrink-0">
@@ -584,9 +611,9 @@ export default function LandingPage() {
           <div className="flex justify-between items-end mb-10 max-w-6xl mx-auto">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Noticias Recientes</h2>
-              <div className="h-1 w-20 bg-[#7bc143] mt-3 rounded-full"></div>
+              <div className="h-1 w-20 bg-[#5a9f35] mt-3 rounded-full"></div>
             </div>
-            <a href="/novedades" className="hidden md:block text-[#7bc143] font-bold hover:underline" aria-label="Ver todas las noticias">Ver todas</a>
+            <a href="/novedades" className="hidden md:block text-[#5a9f35] font-bold hover:underline" aria-label="Ver todas las noticias">Ver todas</a>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -603,7 +630,7 @@ export default function LandingPage() {
                   style={{ willChange: 'transform, opacity' }}
                 >
                   <div className="h-48 overflow-hidden relative bg-gray-200">
-                    <span className="absolute top-4 left-4 bg-[#7bc143] text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+                    <span className="absolute top-4 left-4 bg-[#5a9f35] text-white text-xs font-bold px-3 py-1 rounded-full z-10">
                       {news.category}
                     </span>
                     <img
@@ -623,10 +650,10 @@ export default function LandingPage() {
                     />
                   </div>
                   <div className="p-6">
-                    <h3 className="font-bold text-lg mb-2 leading-tight group-hover:text-[#7bc143] transition-colors">
+                    <h3 className="font-bold text-lg mb-2 leading-tight group-hover:text-[#5a9f35] transition-colors">
                       {news.title}
                     </h3>
-                    <p className="text-gray-500 text-sm line-clamp-3">
+                    <p className="text-gray-600 text-sm line-clamp-3">
                       {news.snippet}
                     </p>
                   </div>
@@ -635,7 +662,7 @@ export default function LandingPage() {
             )}
           </div>
           <div className="mt-8 text-center md:hidden">
-            <a href="/novedades" className="text-[#7bc143] font-bold hover:underline inline-block" aria-label="Ver todas las noticias">Ver todas las noticias</a>
+            <a href="/novedades" className="text-[#5a9f35] font-bold hover:underline inline-block" aria-label="Ver todas las noticias">Ver todas las noticias</a>
           </div>
         </div>
       </section>
@@ -647,7 +674,7 @@ export default function LandingPage() {
             <h2 id="mapa-titulo" className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">Mapa Interactivo</h2>
             <Suspense fallback={
               <div className="h-[500px] bg-gray-100 rounded-lg flex items-center justify-center">
-                <div className="text-gray-600">Cargando mapa...</div>
+                <div className="text-gray-700">Cargando mapa...</div>
               </div>
             }>
               <InteractiveMap height="500px" showTitle={false} />
@@ -655,7 +682,7 @@ export default function LandingPage() {
             <div className="mt-8 text-center">
               <a
                 href="/mapa"
-                className="inline-flex items-center gap-2 text-[#7bc143] font-bold hover:underline"
+                className="inline-flex items-center gap-2 text-[#5a9f35] font-bold hover:underline"
                 aria-label="Ver mapa completo de Lonquimay"
               >
                 Ver mapa completo
@@ -680,7 +707,7 @@ export default function LandingPage() {
               </p>
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                  <MapPin className="text-[#7bc143] mb-2" aria-hidden="true" />
+                  <MapPin className="text-[#5a9f35] mb-2" aria-hidden="true" />
                   <h3 className="font-bold text-lg">Ubicación</h3>
                   <p className="text-sm text-gray-600">Ruta Nacional 5</p>
                 </div>
