@@ -76,7 +76,7 @@ src/
 
 | Section | Preview |
 | ------- | ------- |
-| Hero & Search | ![Hero Preview](/public/hero-preview.png) |
+| Hero & Search | ![Hero Preview](/public/hero-preview.PNG) |
 
 ---
 
