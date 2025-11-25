@@ -278,9 +278,9 @@ const WeatherWidget = () => {
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <CloudSun size={64} className="text-gray-300" />
+              <CloudSun size={64} className="text-gray-400" />
             </motion.div>
-            <span className="text-6xl font-bold text-gray-300">--<span className="text-3xl align-top">°C</span></span>
+            <span className="text-6xl font-bold text-gray-600">--<span className="text-3xl align-top text-gray-600">°C</span></span>
           </div>
         ) : error ? (
           <div className="text-gray-400 text-sm py-8">
@@ -297,7 +297,7 @@ const WeatherWidget = () => {
               </motion.div>
               <span className="text-6xl font-bold text-green-700">
                 {String(weatherData.temperature ?? '--')}
-                <span className="text-3xl align-top">°C</span>
+                <span className="text-3xl align-top text-green-700">°C</span>
               </span>
             </div>
 
