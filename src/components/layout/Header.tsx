@@ -95,7 +95,6 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
                     ? 'bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100' 
                     : 'bg-transparent shadow-none border-b border-transparent'
             }`} 
-            data-astro-transition-persist
         >
             <div className="container mx-auto px-3 sm:px-4 md:px-8 h-20 sm:h-24 md:h-28 flex items-center justify-between py-2">
                 <a href="/" className="shrink-0 min-w-0">
