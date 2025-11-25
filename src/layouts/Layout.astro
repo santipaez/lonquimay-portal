@@ -8,20 +8,11 @@ interface Props {
 
 const { title, description = "Sitio oficial de la Municipalidad de Lonquimay, La Pampa. Acceso a trámites, requisitos, noticias y servicios municipales." } = Astro.props;
 
-// Obtener la URL base (funciona tanto en desarrollo como en producción)
-// En Vercel, Astro.url.origin tiene la URL correcta del deployment en runtime
-// En build time, import.meta.env.SITE viene de astro.config.mjs
-// Priorizamos Astro.url.origin porque siempre funciona en runtime (Vercel, desarrollo, etc)
-let baseUrl = Astro.url.origin || import.meta.env.SITE || "https://lonquimay.gob.ar";
-// Asegurar que sea HTTPS para WhatsApp (requerimiento)
-baseUrl = baseUrl.replace(/^http:/, 'https:');
-const siteUrl = import.meta.env.SITE || "https://lonquimay.gob.ar";
-const pageUrl = new URL(Astro.url.pathname, baseUrl).href;
-// Construir URL absoluta de la imagen para Open Graph
-// Usamos el endpoint API que genera una imagen optimizada de 1200x630px
-const ogImage = `${baseUrl.replace(/\/$/, '')}/api/og-image`;
-// Fallback al logo si la imagen optimizada no existe
-const ogImageFallback = `${baseUrl.replace(/\/$/, '')}/logo-lonquimay.png`;
+// URL base hardcodeada para Open Graph (WhatsApp necesita URLs absolutas estables)
+const siteUrl = "https://lonquimay-portal.vercel.app";
+const pageUrl = `${siteUrl}${Astro.url.pathname}`;
+// Usar el logo directamente como imagen OG (imagen estática, siempre disponible)
+const ogImage = `${siteUrl}/og-image.png`;
 ---
 
 <!doctype html>
