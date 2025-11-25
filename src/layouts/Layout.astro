@@ -11,8 +11,8 @@ const { title, description = "Sitio oficial de la Municipalidad de Lonquimay, La
 // URL base hardcodeada para Open Graph (WhatsApp necesita URLs absolutas estables)
 const siteUrl = "https://lonquimay-portal.vercel.app";
 const pageUrl = `${siteUrl}${Astro.url.pathname}`;
-// Usar el logo directamente como imagen OG (imagen estática, siempre disponible)
-const ogImage = `${siteUrl}/og-image.png`;
+// Imagen OG de 1200x630 para summary_large_image
+const ogImage = `${siteUrl}/og-image.jpg`;
 ---
 
 <!doctype html>
@@ -56,7 +56,7 @@ const ogImage = `${siteUrl}/og-image.png`;
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImage} />
 		<meta property="og:image:secure_url" content={ogImage} />
-		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:type" content="image/jpeg" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:alt" content="Municipalidad de Lonquimay - Tu Municipio" />

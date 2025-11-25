@@ -3,19 +3,19 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Logo = ({ isSolid }: { isSolid: boolean }) => (
-    <div className="flex items-center gap-2 sm:gap-2">
+    <div className="flex items-center gap-2 sm:gap-3">
         <img
             src="/logo-lonquimay.png"
             alt="Logo Lonquimay"
-            className="h-8 sm:h-7 md:h-9 w-auto object-contain shrink-0"
+            className="h-10 sm:h-11 md:h-14 w-auto object-contain shrink-0"
         />
         <div className="flex flex-col min-w-0" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            <span className={`text-[11px] sm:text-[10px] md:text-xs font-normal uppercase tracking-wide leading-tight transition-colors whitespace-nowrap ${
+            <span className={`text-xs sm:text-sm md:text-base font-normal uppercase tracking-wide leading-tight transition-colors whitespace-nowrap ${
                 isSolid ? 'text-gray-600' : 'text-white'
             }`}>
                 MUNICIPALIDAD DE
             </span>
-            <span className="text-[#7bc143] text-base sm:text-base md:text-lg font-bold uppercase tracking-wide leading-tight whitespace-nowrap">
+            <span className="text-[#7bc143] text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-wide leading-tight whitespace-nowrap">
                 LONQUIMAY
             </span>
         </div>
@@ -72,18 +72,18 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
             }`} 
             data-astro-transition-persist
         >
-            <div className="container mx-auto px-3 sm:px-4 md:px-8 h-14 sm:h-16 md:h-20 flex items-center justify-between py-2">
+            <div className="container mx-auto px-3 sm:px-4 md:px-8 h-20 sm:h-24 md:h-28 flex items-center justify-between py-2">
                 <a href="/" className="shrink-0 min-w-0">
                     <Logo isSolid={shouldBeSolid} />
                 </a>
 
                 {/* Desktop Nav - Solo se muestra en pantallas grandes (lg y más) */}
-                <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
+                <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
                     {menuItems.map((item) => (
                         <a
                             key={item.label}
                             href={item.href}
-                            className={`font-medium transition-colors text-xs xl:text-sm uppercase tracking-wide whitespace-nowrap ${
+                            className={`font-medium transition-colors text-sm xl:text-base uppercase tracking-wide whitespace-nowrap ${
                                 currentPage === item.label
                                     ? 'text-[#7bc143] font-bold'
                                     : shouldBeSolid
@@ -104,7 +104,7 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-label="Menú"
                 >
-                    {isMenuOpen ? <X size={24} className="sm:w-7 sm:h-7" /> : <Menu size={24} className="sm:w-7 sm:h-7" />}
+                    {isMenuOpen ? <X size={28} className="sm:w-8 sm:h-8" /> : <Menu size={28} className="sm:w-8 sm:h-8" />}
                 </button>
             </div>
 
