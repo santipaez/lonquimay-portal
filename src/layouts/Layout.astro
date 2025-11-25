@@ -7,9 +7,16 @@ interface Props {
 }
 
 const { title, description = "Sitio oficial de la Municipalidad de Lonquimay, La Pampa. Acceso a trámites, requisitos, noticias y servicios municipales." } = Astro.props;
+
+// Obtener la URL base (funciona tanto en desarrollo como en producción)
+// En Vercel, Astro.url.origin tiene la URL correcta del deployment en runtime
+// En build time, import.meta.env.SITE viene de astro.config.mjs
+// Priorizamos Astro.url.origin porque siempre funciona en runtime (Vercel, desarrollo, etc)
+const baseUrl = Astro.url.origin || import.meta.env.SITE || "https://lonquimay.gob.ar";
 const siteUrl = import.meta.env.SITE || "https://lonquimay.gob.ar";
-const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
-const ogImage = new URL("/logo-lonquimay.png", siteUrl).href;
+const pageUrl = new URL(Astro.url.pathname, baseUrl).href;
+// Construir URL absoluta de la imagen (siempre con / al inicio, sin duplicar)
+const ogImage = `${baseUrl.replace(/\/$/, '')}/logo-lonquimay.png`;
 ---
 
 <!doctype html>
@@ -52,6 +59,7 @@ const ogImage = new URL("/logo-lonquimay.png", siteUrl).href;
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:alt" content="Logo de la Municipalidad de Lonquimay" />
@@ -70,7 +78,7 @@ const ogImage = new URL("/logo-lonquimay.png", siteUrl).href;
 			<script src="/_pagefind/pagefind.js" type="module"></script>
 		)}
 	</head>
-	<body class="m-0 p-0">
+	<body class="bg-gray-50 m-0 p-0 w-full overflow-x-hidden">
 		<slot />
 		
 		<!-- AOS (Animate On Scroll) -->
