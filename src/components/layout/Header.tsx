@@ -34,7 +34,7 @@ const Logo = ({ isSolid }: { isSolid: boolean }) => (
 
 interface HeaderProps {
     currentPage?: string;
-    transparent?: boolean; // Si es true, el header es transparente (para home), si es false, siempre sólido (para páginas internas)
+    transparent?: boolean;
 }
 
 export default function Header({ currentPage = 'Inicio', transparent = false }: HeaderProps) {
@@ -54,7 +54,6 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
         const handleScroll = () => {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    // Usar valor en caché para evitar múltiples lecturas
                     cachedScrollY = window.scrollY;
                     if (Math.abs(cachedScrollY - lastScrollY) > 5) {
                         setIsScrolled(cachedScrollY > 50);
@@ -68,7 +67,6 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         
-        // Inicializar con requestAnimationFrame para evitar reflow inmediato
         requestAnimationFrame(() => {
             cachedScrollY = window.scrollY;
             setIsScrolled(cachedScrollY > 50);
@@ -88,8 +86,7 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
         { label: 'Contacto', href: '/contacto' }
     ];
 
-    // Determinar si el header debe estar sólido o transparente
-    const shouldBeSolid = transparent ? isScrolled : true; // Si transparent=false, siempre sólido
+    const shouldBeSolid = transparent ? isScrolled : true;
 
     return (
         <header 
@@ -105,7 +102,6 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
                     <Logo isSolid={shouldBeSolid} />
                 </a>
 
-                {/* Desktop Nav - Solo se muestra en pantallas grandes (lg y más) */}
                 <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
                     {menuItems.map((item) => (
                         <a
@@ -124,7 +120,6 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
                     ))}
                 </nav>
 
-                {/* Mobile/Tablet Menu Toggle - Se muestra desde md hacia abajo (incluye tablets) */}
                 <button
                     className={`lg:hidden p-2 transition-colors shrink-0 ${
                         shouldBeSolid ? 'text-gray-600' : 'text-white'
@@ -136,7 +131,6 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
                 </button>
             </div>
 
-            {/* Mobile/Tablet Nav Drawer */}
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
@@ -167,3 +161,4 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
         </header>
     );
 }
+

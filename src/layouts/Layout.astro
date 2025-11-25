@@ -173,26 +173,6 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 			})();
 		</script>
 		
-		<!-- AOS (Animate On Scroll) - Cargado de forma asíncrona -->
-		<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-		<noscript>
-			<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-		</noscript>
-		<script defer>
-			(function() {
-				var script = document.createElement('script');
-				script.src = 'https://unpkg.com/aos@2.3.1/dist/aos.js';
-				script.async = true;
-				script.defer = true;
-				script.onload = function() {
-					if (typeof AOS !== 'undefined') {
-						AOS.init();
-					}
-				};
-				document.body.appendChild(script);
-			})();
-		</script>
-		
 		<!-- Pagefind Search (solo en producción) - Carga diferida -->
 		{import.meta.env.PROD && (
 			<script src="/_pagefind/pagefind.js" type="module" defer></script>

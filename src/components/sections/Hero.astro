@@ -1,0 +1,27 @@
+---
+import HeroContent from '../features/HeroContent';
+---
+
+<section class="relative h-[750px] md:h-[900px] flex items-center pt-20 md:pt-24">
+  <div class="absolute inset-0 z-10 overflow-hidden">
+    <video
+      autoplay
+      loop
+      muted
+      playsinline
+      class="absolute inset-0 w-full h-full object-cover"
+      preload="auto"
+    >
+      <source src="/bg-lonqui.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <div class="absolute inset-0 z-20 pointer-events-none">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-transparent"></div>
+    <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/70 to-transparent"></div>
+  </div>
+
+  <HeroContent client:idle />
+</section>
+

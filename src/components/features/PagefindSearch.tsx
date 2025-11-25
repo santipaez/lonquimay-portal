@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, X } from 'lucide-react';
 
-// Páginas y contenido buscable
 const SEARCHABLE_PAGES = [
   { url: '/', title: 'Inicio', description: 'Portal principal del municipio', keywords: 'inicio, home, portal, principal' },
   { url: '/el-municipio', title: 'El Municipio', description: 'Información sobre la administración municipal', keywords: 'municipio, gobierno, administración, municipalidad' },
@@ -23,9 +22,7 @@ export default function PagefindSearch() {
   const pagefindRef = useRef<any>(null);
 
   useEffect(() => {
-    // Intentar cargar Pagefind si está disponible (solo en producción)
     if (isOpen && !pagefindRef.current && typeof window !== 'undefined') {
-      // @ts-ignore - Pagefind se carga globalmente
       if ((window as any).Pagefind) {
         setIsLoading(true);
         (window as any).Pagefind().then((pf: any) => {
@@ -47,7 +44,6 @@ export default function PagefindSearch() {
       return;
     }
 
-    // Si Pagefind está disponible, usarlo
     if (pagefindRef.current) {
       setIsLoading(true);
       try {
@@ -66,13 +62,11 @@ export default function PagefindSearch() {
         setResults(resultsData);
       } catch (error) {
         console.error('Error searching with Pagefind:', error);
-        // Fallback a búsqueda simple
         performSimpleSearch(searchQuery);
       } finally {
         setIsLoading(false);
       }
     } else {
-      // Búsqueda simple como fallback
       performSimpleSearch(searchQuery);
     }
   };
@@ -132,7 +126,6 @@ export default function PagefindSearch() {
           )}
         </div>
 
-        {/* Resultados */}
         {isOpen && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/95 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700/50 max-h-96 overflow-y-auto z-[100]">
             {isLoading && (
@@ -188,7 +181,6 @@ export default function PagefindSearch() {
         )}
       </div>
 
-      {/* Overlay para cerrar al hacer click fuera */}
       {isOpen && (
         <div
           className="fixed inset-0 z-40"

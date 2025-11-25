@@ -1,0 +1,37 @@
+---
+import WeatherWidget from '../features/WeatherWidget';
+---
+
+<section class="py-16 bg-[#f8fafc]">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+      <div class="order-2 md:order-1">
+        <WeatherWidget client:visible />
+      </div>
+      <div class="order-1 md:order-2 space-y-6">
+        <h2 class="text-3xl font-bold text-gray-800">Lonquimay: Corazón de la Pampa</h2>
+        <p class="text-gray-600 leading-relaxed">
+          Descubrí la inmensidad de nuestra llanura. En Lonquimay, la tranquilidad y la tradición se encuentran en cada rincón. Un pueblo seguro, de gente cálida, donde el horizonte se une con el cielo.
+        </p>
+        <div class="grid grid-cols-2 gap-4 pt-4">
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7bc143" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <h3 class="font-bold text-lg">Ubicación</h3>
+            <p class="text-sm text-gray-600">Ruta Nacional 5</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4a9bb7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2" aria-hidden="true">
+              <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2m5.8-7.4L7 4.9m0 0L9 2m-2 2.9L2.5 4.5M7 4.9l-.5-1.4M7 4.9l.5 1.4m12-1.4L20 2m2 2.9l-4-2.4M20 4.9l-.5-1.4M20 4.9l.5 1.4"/>
+            </svg>
+            <h3 class="font-bold text-lg">Cuna de la Tradición</h3>
+            <p class="text-sm text-gray-600">Cultura y Raíces</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

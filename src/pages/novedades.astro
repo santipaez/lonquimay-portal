@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Breadcrumb from "../components/Breadcrumb.astro";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer.astro";
+import Breadcrumb from "../components/ui/Breadcrumb.astro";
 import "../styles/global.css";
 
 const NEWS = [
@@ -172,5 +172,5 @@ const NEWS = [
             </section>
         </main>
 
-	<Footer client:load />
+	<Footer />
 </Layout>

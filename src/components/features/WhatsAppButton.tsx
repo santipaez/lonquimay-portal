@@ -2,8 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export default function WhatsAppButton() {
-  // Número de WhatsApp: 02954 494255
-  // Formato para WhatsApp: 542954494255 (código país + número sin 0 inicial)
   const whatsappNumber = '542954494255';
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 

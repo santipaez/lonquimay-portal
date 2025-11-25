@@ -1,0 +1,76 @@
+---
+interface NewsItem {
+  id: number;
+  title: string;
+  snippet: string;
+  image: string;
+  category: string;
+}
+
+interface Props {
+  news: NewsItem[];
+}
+
+const { news } = Astro.props;
+
+const getUnsplashSrcSet = (baseUrl: string): string => {
+  const sizes = [300, 400, 500, 600];
+  return sizes.map(size => {
+    try {
+      const url = new URL(baseUrl);
+      url.searchParams.set('w', size.toString());
+      url.searchParams.set('q', '70');
+      return `${url.toString()} ${size}w`;
+    } catch {
+      return `${baseUrl}?w=${size}&q=70 ${size}w`;
+    }
+  }).join(', ');
+};
+---
+
+<section class="py-12 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-end mb-10 max-w-6xl mx-auto">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Noticias Recientes</h2>
+        <div class="h-1 w-20 bg-green-700 mt-3 rounded-full"></div>
+      </div>
+      <a href="/novedades" class="hidden md:block text-green-700 font-bold hover:underline" aria-label="Ver todas las noticias">Ver todas</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      {news.map((item) => (
+        <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-green-100/50 transition-all group cursor-pointer">
+          <div class="h-48 overflow-hidden relative bg-gray-200">
+            <span class="absolute top-4 left-4 bg-green-700 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+              {item.category}
+            </span>
+            <img
+              src={item.image}
+              srcset={getUnsplashSrcSet(item.image)}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+              alt={item.title}
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+              decoding="async"
+              width={400}
+              height={200}
+            />
+          </div>
+          <div class="p-6">
+            <h3 class="font-bold text-lg mb-2 leading-tight group-hover:text-green-700 transition-colors">
+              {item.title}
+            </h3>
+            <p class="text-gray-600 text-sm line-clamp-3">
+              {item.snippet}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="mt-8 text-center md:hidden">
+      <a href="/novedades" class="text-green-700 font-bold hover:underline inline-block" aria-label="Ver todas las noticias">Ver todas las noticias</a>
+    </div>
+  </div>
+</section>
+

@@ -97,7 +97,6 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
 
         const L = await import('leaflet');
         
-        // Cargar CSS de Leaflet de forma diferida
         if (!document.querySelector('link[href*="leaflet.css"]')) {
           const cssLink = document.createElement('link');
           cssLink.rel = 'stylesheet';
@@ -111,14 +110,12 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           document.head.appendChild(cssLink);
         }
         
-        // También intentar importar el CSS localmente
         try {
           await import('leaflet/dist/leaflet.css');
         } catch (e) {
           console.warn('No se pudo cargar CSS local de Leaflet, usando CDN');
         }
         
-        // Esperar un momento para que el CSS esté listo
         await new Promise(resolve => setTimeout(resolve, 200));
 
         if (mapRef.current) {
@@ -127,7 +124,6 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           return;
         }
 
-        // Leaflet se importa como namespace, no como default
         const Leaflet = L as typeof import('leaflet');
         
         if (!Leaflet || typeof Leaflet.map !== 'function') {
@@ -142,10 +138,8 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
         
         console.log('Leaflet cargado correctamente');
 
-        // Coordenadas de Lonquimay, La Pampa
         const lonquimayCenter: [number, number] = [-36.4642, -63.6244];
 
-        // Función para crear iconos SVG personalizados (basados en lucide-react)
         const getIconSVG = (iconType: MapPoint['icon']): string => {
           const icons = {
             municipalidad: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -181,7 +175,6 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           return icons[iconType] || icons.municipalidad;
         };
 
-        // Función para crear iconos personalizados (dentro del useEffect para tener acceso a L)
         const createCustomIcon = (color: string, iconType: MapPoint['icon']) => {
           const iconSVG = getIconSVG(iconType);
 
@@ -217,13 +210,11 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           });
         };
 
-        // Asegurar que el contenedor tenga dimensiones
         if (mapContainerRef.current) {
           mapContainerRef.current.style.height = height;
           mapContainerRef.current.style.width = '100%';
         }
 
-        // Inicializar el mapa
         const map = Leaflet.map(mapContainerRef.current, {
           center: lonquimayCenter,
           zoom: 16,
@@ -231,26 +222,22 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           scrollWheelZoom: true
         });
 
-        // Agregar capa de OpenStreetMap
         Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           maxZoom: 19
         }).addTo(map);
 
-        // Invalidar el tamaño del mapa usando requestAnimationFrame para evitar reflows
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             map.invalidateSize();
           });
         });
 
-        // Agregar marcadores
         MAP_POINTS.forEach((point) => {
           const marker = Leaflet.marker([point.lat, point.lng], {
             icon: createCustomIcon(point.color, point.icon)
           }).addTo(map);
 
-          // Popup con información
           marker.bindPopup(`
             <div style="min-width: 200px;">
               <h3 style="margin: 0 0 8px 0; font-weight: bold; color: ${point.color};">
@@ -263,13 +250,11 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           `);
         });
 
-        // Ajustar el view para mostrar todos los marcadores
         const group = new Leaflet.FeatureGroup(
           MAP_POINTS.map(point => Leaflet.marker([point.lat, point.lng]))
         );
         map.fitBounds(group.getBounds().pad(0.1));
 
-        // Invalidar el tamaño del mapa usando requestAnimationFrame para evitar reflows
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             map.invalidateSize();
@@ -323,7 +308,6 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
     };
   }, []);
 
-  // Mostrar skeleton mientras carga, pero mantener el contenedor del mapa siempre renderizado
   const showLoading = !isClient || isLoading;
 
   return (
@@ -357,7 +341,6 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
         />
       </div>
       
-      {/* Leyenda */}
       <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
         {MAP_POINTS.map((point) => {
           const getLegendIcon = () => {
@@ -392,3 +375,4 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
     </div>
   );
 }
+

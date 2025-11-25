@@ -20,13 +20,10 @@ export default function NewsList({ initialNews = [] }: NewsListProps) {
   const [newsData, setNewsData] = useState<NewsItem[]>(initialNews);
 
   useEffect(() => {
-    // Simular carga de datos (cuando conectes Supabase, reemplazá esto)
     const loadNews = async () => {
       setNewsLoading(true);
-      // Simular fetch desde Supabase con delay de 0.5-1 segundo
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Si hay datos iniciales, usarlos; sino, simular carga vacía
       if (initialNews.length > 0) {
         setNewsData(initialNews);
       }

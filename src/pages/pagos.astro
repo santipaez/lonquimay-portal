@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Breadcrumb from "../components/Breadcrumb.astro";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer.astro";
+import Breadcrumb from "../components/ui/Breadcrumb.astro";
 import { CreditCard, Clock, CheckCircle, MessageCircle, Copy, Check, Lightbulb } from "lucide-react";
 import "../styles/global.css";
 ---
@@ -189,7 +189,7 @@ import "../styles/global.css";
             </section>
         </main>
 
-	<Footer client:load />
+	<Footer />
 
 	<script>
             // Funcionalidad para copiar al portapapeles
