@@ -8,10 +8,11 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Font families */
+/* Font families - @fontsource ya incluye font-display: swap por defecto */
 :root {
   --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
 }
 
 /* Base font - Inter for body text */
@@ -141,4 +142,67 @@ header,
     to {
         opacity: 1;
     }
+}
+
+/* Animaciones on scroll nativas con IntersectionObserver */
+[data-animate] {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+[data-animate].visible {
+    opacity: 1;
+}
+
+[data-animate="fade-up"] {
+    transform: translateY(20px);
+}
+
+[data-animate="fade-up"].visible {
+    transform: translateY(0);
+}
+
+[data-animate="fade-down"] {
+    transform: translateY(-20px);
+}
+
+[data-animate="fade-down"].visible {
+    transform: translateY(0);
+}
+
+[data-animate="fade-left"] {
+    transform: translateX(-20px);
+}
+
+[data-animate="fade-left"].visible {
+    transform: translateX(0);
+}
+
+[data-animate="fade-right"] {
+    transform: translateX(20px);
+}
+
+[data-animate="fade-right"].visible {
+    transform: translateX(0);
+}
+
+[data-animate="fade-in"] {
+    transform: none;
+}
+
+[data-animate="scale-up"] {
+    transform: scale(0.95);
+}
+
+[data-animate="scale-up"].visible {
+    transform: scale(1);
+}
+
+/* Optimización para evitar reflows */
+[data-animate] {
+    will-change: opacity, transform;
+}
+
+[data-animate].visible {
+    will-change: auto;
 }
