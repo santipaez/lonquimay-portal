@@ -80,6 +80,14 @@ src/
 
 ---
 
+## 🏆 Performance
+
+Achieved near-perfect Lighthouse scores on mobile devices.
+
+![Lighthouse Score](/public/lighthouse-score.PNG)
+
+---
+
 ## 🌐 Deployment Checklist
 
 - [ ] Update canonical domain in `src/layouts/Layout.astro`
