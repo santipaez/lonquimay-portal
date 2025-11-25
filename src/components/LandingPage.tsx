@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from 'react';
 import {
-  Search,
   CreditCard,
   FileText,
   Newspaper,
@@ -9,9 +8,7 @@ import {
   CloudSun,
   Wind,
   Droplets,
-  ArrowRight,
-  Calendar,
-  Pill
+  ArrowRight
 } from 'lucide-react';
 
 // Lazy load componentes pesados que no son críticos para el LCP
@@ -57,10 +54,10 @@ const getUnsplashSrcSet = (baseUrl: string): string => {
 
 // --- Mock Data ---
 const SERVICES: ServiceBtn[] = [
-  { icon: CreditCard, label: "Pagos", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/pagos" },
-  { icon: FileText, label: "Trámites", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/tramites" },
-  { icon: Newspaper, label: "Noticias", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/novedades" },
-  { icon: Phone, label: "Números Útiles", color: "text-white", bgColor: "bg-[#5a9f35]", href: "/numeros-utiles" },
+  { icon: CreditCard, label: "Pagos", color: "text-white", bgColor: "bg-green-700", href: "/pagos" },
+  { icon: FileText, label: "Trámites", color: "text-white", bgColor: "bg-green-700", href: "/tramites" },
+  { icon: Newspaper, label: "Noticias", color: "text-white", bgColor: "bg-green-700", href: "/novedades" },
+  { icon: Phone, label: "Números Útiles", color: "text-white", bgColor: "bg-green-700", href: "/numeros-utiles" },
 ];
 
 const NEWS: NewsItem[] = [
@@ -270,7 +267,7 @@ const WeatherWidget = () => {
       <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-100 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
 
       <div className="text-center relative z-10">
-        <h3 className="text-[#5a9f35] font-bold text-xl md:text-2xl mb-1">Lonquimay, AR</h3>
+        <h3 className="text-green-700 font-bold text-xl md:text-2xl mb-1">Lonquimay, AR</h3>
         <p className="text-gray-600 text-sm mb-6">
           {loading ? 'Cargando...' : formatDate()}
         </p>
@@ -298,7 +295,7 @@ const WeatherWidget = () => {
               >
                 {getWeatherIcon(weatherData.icon)}
               </motion.div>
-              <span className="text-6xl font-bold text-[#5a9f35]">
+              <span className="text-6xl font-bold text-green-700">
                 {String(weatherData.temperature ?? '--')}
                 <span className="text-3xl align-top">°C</span>
               </span>
@@ -330,21 +327,12 @@ const WeatherWidget = () => {
 };
 
 export default function LandingPage() {
-  const [currentSlide, setCurrentSlide] = React.useState(0);
   const [newsLoading, setNewsLoading] = React.useState(true);
   const [newsData, setNewsData] = React.useState<NewsItem[]>([]);
-  const [currentDate, setCurrentDate] = React.useState<string>('');
-  const videoRef = React.useRef<HTMLVideoElement>(null);
 
-  // For hero carousel dots (if adding multiple videos/images later)
-  const heroSlides = 1; // Currently just one video
-
-  // Simular carga de datos (cuando conectes Supabase, reemplazá esto)
   React.useEffect(() => {
-    // Simular delay de carga de 0.5-1 segundo
     const loadNews = async () => {
       setNewsLoading(true);
-      // Simular fetch desde Supabase
       await new Promise(resolve => setTimeout(resolve, 500));
       setNewsData(NEWS);
       setNewsLoading(false);
@@ -353,161 +341,8 @@ export default function LandingPage() {
     loadNews();
   }, []);
 
-  // Actualizar fecha solo en el cliente para evitar problemas de hidratación
-  React.useEffect(() => {
-    try {
-      const dateStr = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' });
-      setCurrentDate(dateStr || '');
-    } catch {
-      setCurrentDate(new Date().toLocaleDateString('es-AR') || '');
-    }
-  }, []);
-
-  // Cargar video solo cuando sea visible
-  React.useEffect(() => {
-    if (!videoRef.current || typeof window === 'undefined') return;
-
-    const video = videoRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && video.readyState === 0) {
-            video.load();
-          }
-        });
-      },
-      { rootMargin: '50px' }
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
-      {/* --- HERO SECTION with Left-Aligned Modern Design --- */}
-      <section className="relative h-[750px] md:h-[900px] flex items-center pt-20 md:pt-24">
-        {/* Video Background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="none"
-            className="w-full h-full object-cover"
-            style={{ willChange: 'auto' }}
-            onLoadedData={(e) => {
-              e.currentTarget.play().catch(() => {});
-            }}
-            onError={(e) => {
-              const video = e.currentTarget;
-              video.style.display = 'none';
-              const fallback = video.parentElement?.querySelector('.video-fallback');
-              if (fallback) {
-                (fallback as HTMLElement).classList.remove('hidden');
-                (fallback as HTMLElement).style.display = 'block';
-              }
-            }}
-          >
-            <source src="/bg-lonqui.mp4" type="video/mp4" />
-          </video>
-          {/* Fallback si el video no carga */}
-          <div className="video-fallback absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hidden"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-transparent"></div>
-          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/70 to-transparent pointer-events-none"></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-6 md:px-12 mt-10">
-          <div className="max-w-2xl">
-            {/* Title */}
-            <h1
-              className="text-5xl md:text-7xl text-white mb-6 leading-tight tracking-tight lcp-title"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
-            >
-              <span className="font-light">Bienvenido a</span> <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300 font-extrabold uppercase tracking-tight">
-                LONQUIMAY
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              className="text-lg md:text-xl text-slate-200 mb-10 font-light leading-relaxed max-w-lg lcp-subtitle"
-            >
-              Gestión transparente y cercana. Accedé a trámites, servicios y noticias de tu municipio en un solo lugar.
-            </p>
-
-            {/* Search Bar */}
-            <div
-              className="bg-white p-2 rounded-full flex flex-row gap-2 w-full max-w-lg relative shadow-2xl lcp-search"
-            >
-              <div className="flex-1 flex items-center px-3 md:px-4 min-w-0">
-                <Search className="w-5 h-5 text-slate-500 mr-2 md:mr-3 shrink-0" aria-hidden="true" />
-                <div className="flex-1 min-w-0 relative">
-                  <Suspense fallback={null}>
-                    <PagefindSearch />
-                  </Suspense>
-                </div>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget.closest('form') || 
-                              e.currentTarget.parentElement?.querySelector('input[type="text"]')?.closest('form');
-                  const input = form?.querySelector('input[type="text"]') as HTMLInputElement ||
-                               document.querySelector('input[type="text"]') as HTMLInputElement;
-                  if (input?.value) {
-                    window.location.href = `/tramites?q=${encodeURIComponent(input.value)}`;
-                  }
-                }}
-                className="bg-green-700 hover:bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 text-sm md:text-base"
-                aria-label="Buscar en el portal"
-              >
-                Buscar
-              </button>
-            </div>
-
-            {/* Popular Searches */}
-            <div
-              className="mt-8 flex gap-4 text-sm text-slate-200 flex-wrap lcp-popular"
-            >
-              <span>Lo más buscado:</span>
-              <a href="/pagos" className="text-white hover:text-green-300 underline decoration-green-400 underline-offset-4 transition-colors" aria-label="Buscar información sobre impuestos">Impuestos</a>
-              <a href="/tramites" className="text-white hover:text-green-300 underline decoration-green-400 underline-offset-4 transition-colors" aria-label="Buscar información sobre licencias">Licencia</a>
-            </div>
-          </div>
-        </div>
-
-        {/* Data Strip integrated */}
-        <div className="absolute bottom-0 w-full border-t border-white/10 bg-slate-900/80 backdrop-blur-md z-10">
-          <div className="container mx-auto px-3 md:px-6 py-3 md:py-4 flex flex-nowrap justify-between md:justify-between items-center text-sm md:text-sm font-medium tracking-wide overflow-x-auto">
-            <div className="flex items-center gap-2 md:gap-3 text-slate-200 shrink-0">
-              <Calendar className="w-5 h-5 md:w-5 md:h-5 text-green-300 shrink-0" aria-hidden="true" />
-              <span className="uppercase text-xs md:text-xs font-bold tracking-widest text-slate-300 hidden sm:inline">Hoy</span>
-                <time dateTime={new Date().toISOString()} className="text-white text-sm md:text-sm whitespace-nowrap" aria-label="Fecha actual">
-                {currentDate}
-              </time>
-            </div>
-
-            <div className="flex items-center gap-4 md:gap-12 shrink-0">
-              <div className="flex items-center gap-2 md:gap-2 text-slate-200">
-                <Pill className="w-5 h-5 md:w-5 md:h-5 text-green-300 shrink-0" aria-hidden="true" />
-                <span className="text-sm md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Farmacia: </span><b className="text-white">San José</b></span>
-              </div>
-
-              <div className="hidden md:block w-px h-4 bg-white/20 shrink-0" aria-hidden="true"></div>
-
-              <div className="flex items-center gap-2 md:gap-2 text-slate-200 shrink-0">
-                <CloudSun className="w-5 h-5 md:w-5 md:h-5 text-yellow-300 shrink-0" aria-hidden="true" />
-                <span className="text-sm md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Clima: </span><b className="text-white">24°C</b></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* --- QUICK ACCESS --- */}
       <section className="relative z-20 pb-24 bg-slate-50">
@@ -611,9 +446,9 @@ export default function LandingPage() {
           <div className="flex justify-between items-end mb-10 max-w-6xl mx-auto">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Noticias Recientes</h2>
-              <div className="h-1 w-20 bg-[#5a9f35] mt-3 rounded-full"></div>
+              <div className="h-1 w-20 bg-green-700 mt-3 rounded-full"></div>
             </div>
-            <a href="/novedades" className="hidden md:block text-[#5a9f35] font-bold hover:underline" aria-label="Ver todas las noticias">Ver todas</a>
+            <a href="/novedades" className="hidden md:block text-green-700 font-bold hover:underline" aria-label="Ver todas las noticias">Ver todas</a>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -630,7 +465,7 @@ export default function LandingPage() {
                   style={{ willChange: 'transform, opacity' }}
                 >
                   <div className="h-48 overflow-hidden relative bg-gray-200">
-                    <span className="absolute top-4 left-4 bg-[#5a9f35] text-white text-xs font-bold px-3 py-1 rounded-full z-10">
+                    <span className="absolute top-4 left-4 bg-green-700 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
                       {news.category}
                     </span>
                     <img
@@ -650,7 +485,7 @@ export default function LandingPage() {
                     />
                   </div>
                   <div className="p-6">
-                    <h3 className="font-bold text-lg mb-2 leading-tight group-hover:text-[#5a9f35] transition-colors">
+                    <h3 className="font-bold text-lg mb-2 leading-tight group-hover:text-green-700 transition-colors">
                       {news.title}
                     </h3>
                     <p className="text-gray-600 text-sm line-clamp-3">
@@ -662,7 +497,7 @@ export default function LandingPage() {
             )}
           </div>
           <div className="mt-8 text-center md:hidden">
-            <a href="/novedades" className="text-[#5a9f35] font-bold hover:underline inline-block" aria-label="Ver todas las noticias">Ver todas las noticias</a>
+            <a href="/novedades" className="text-green-700 font-bold hover:underline inline-block" aria-label="Ver todas las noticias">Ver todas las noticias</a>
           </div>
         </div>
       </section>
@@ -682,7 +517,7 @@ export default function LandingPage() {
             <div className="mt-8 text-center">
               <a
                 href="/mapa"
-                className="inline-flex items-center gap-2 text-[#5a9f35] font-bold hover:underline"
+                className="inline-flex items-center gap-2 text-green-700 font-bold hover:underline"
                 aria-label="Ver mapa completo de Lonquimay"
               >
                 Ver mapa completo
@@ -707,7 +542,7 @@ export default function LandingPage() {
               </p>
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                  <MapPin className="text-[#5a9f35] mb-2" aria-hidden="true" />
+                  <MapPin className="text-green-700 mb-2" aria-hidden="true" />
                   <h3 className="font-bold text-lg">Ubicación</h3>
                   <p className="text-sm text-gray-600">Ruta Nacional 5</p>
                 </div>
