@@ -3,19 +3,19 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Logo = ({ isSolid }: { isSolid: boolean }) => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 sm:gap-2">
         <img
             src="/logo-lonquimay.png"
             alt="Logo Lonquimay"
-            className="h-7 md:h-9 w-auto object-contain"
+            className="h-8 sm:h-7 md:h-9 w-auto object-contain shrink-0"
         />
-        <div className="flex flex-col" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            <span className={`text-[10px] md:text-xs font-normal uppercase tracking-wide leading-tight transition-colors ${
+        <div className="flex flex-col min-w-0" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <span className={`text-[11px] sm:text-[10px] md:text-xs font-normal uppercase tracking-wide leading-tight transition-colors whitespace-nowrap ${
                 isSolid ? 'text-gray-600' : 'text-white'
             }`}>
                 MUNICIPALIDAD DE
             </span>
-            <span className="text-[#7bc143] text-base md:text-lg font-bold uppercase tracking-wide leading-tight">
+            <span className="text-[#7bc143] text-base sm:text-base md:text-lg font-bold uppercase tracking-wide leading-tight whitespace-nowrap">
                 LONQUIMAY
             </span>
         </div>
@@ -72,18 +72,18 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
             }`} 
             data-astro-transition-persist
         >
-            <div className="container mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between py-2">
-                <a href="/">
+            <div className="container mx-auto px-3 sm:px-4 md:px-8 h-14 sm:h-16 md:h-20 flex items-center justify-between py-2">
+                <a href="/" className="shrink-0 min-w-0">
                     <Logo isSolid={shouldBeSolid} />
                 </a>
 
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-8">
+                {/* Desktop Nav - Solo se muestra en pantallas grandes (lg y más) */}
+                <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
                     {menuItems.map((item) => (
                         <a
                             key={item.label}
                             href={item.href}
-                            className={`font-medium transition-colors text-sm uppercase tracking-wide ${
+                            className={`font-medium transition-colors text-xs xl:text-sm uppercase tracking-wide whitespace-nowrap ${
                                 currentPage === item.label
                                     ? 'text-[#7bc143] font-bold'
                                     : shouldBeSolid
@@ -96,25 +96,26 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
                     ))}
                 </nav>
 
-                {/* Mobile Menu Toggle */}
+                {/* Mobile/Tablet Menu Toggle - Se muestra desde md hacia abajo (incluye tablets) */}
                 <button
-                    className={`md:hidden p-2 transition-colors ${
+                    className={`lg:hidden p-2 transition-colors shrink-0 ${
                         shouldBeSolid ? 'text-gray-600' : 'text-white'
                     }`}
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    aria-label="Menú"
                 >
-                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    {isMenuOpen ? <X size={24} className="sm:w-7 sm:h-7" /> : <Menu size={24} className="sm:w-7 sm:h-7" />}
                 </button>
             </div>
 
-            {/* Mobile Nav Drawer */}
+            {/* Mobile/Tablet Nav Drawer */}
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
+                        className="lg:hidden bg-white border-t border-gray-100 overflow-hidden"
                     >
                         <div className="flex flex-col p-4 space-y-4">
                             {menuItems.map((item) => (

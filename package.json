@@ -25,6 +25,7 @@
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
+    "@vercel/og": "^0.8.5",
     "pagefind": "^1.4.0",
     "vite-plugin-pwa": "^1.1.0"
   }

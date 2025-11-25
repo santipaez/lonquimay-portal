@@ -336,24 +336,24 @@ export default function LandingPage() {
 
         {/* Data Strip integrated */}
         <div className="absolute bottom-0 w-full border-t border-white/10 bg-slate-900/80 backdrop-blur-md z-10">
-          <div className="container mx-auto px-3 md:px-6 py-3 md:py-4 flex flex-nowrap justify-between md:justify-between items-center text-xs md:text-sm font-medium tracking-wide overflow-x-auto">
-            <div className="flex items-center gap-1.5 md:gap-3 text-slate-300 shrink-0">
-              <Calendar className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-400 shrink-0" />
-              <span className="uppercase text-[10px] md:text-xs font-bold tracking-widest text-slate-400 hidden sm:inline">Hoy</span>
-              <span className="text-white text-[10px] md:text-sm whitespace-nowrap">{new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</span>
+          <div className="container mx-auto px-3 md:px-6 py-3 md:py-4 flex flex-nowrap justify-between md:justify-between items-center text-sm md:text-sm font-medium tracking-wide overflow-x-auto">
+            <div className="flex items-center gap-2 md:gap-3 text-slate-300 shrink-0">
+              <Calendar className="w-5 h-5 md:w-5 md:h-5 text-green-400 shrink-0" />
+              <span className="uppercase text-xs md:text-xs font-bold tracking-widest text-slate-400 hidden sm:inline">Hoy</span>
+              <span className="text-white text-sm md:text-sm whitespace-nowrap">{new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</span>
             </div>
 
-            <div className="flex items-center gap-3 md:gap-12 shrink-0">
-              <div className="flex items-center gap-1 md:gap-2 text-slate-300">
-                <Pill className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-400 shrink-0" />
-                <span className="text-[10px] md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Farmacia: </span><b className="text-white">San José</b></span>
+            <div className="flex items-center gap-4 md:gap-12 shrink-0">
+              <div className="flex items-center gap-2 md:gap-2 text-slate-300">
+                <Pill className="w-5 h-5 md:w-5 md:h-5 text-green-400 shrink-0" />
+                <span className="text-sm md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Farmacia: </span><b className="text-white">San José</b></span>
               </div>
 
               <div className="hidden md:block w-px h-4 bg-white/20 shrink-0"></div>
 
-              <div className="flex items-center gap-1 md:gap-2 text-slate-300 shrink-0">
-                <CloudSun className="w-3.5 h-3.5 md:w-5 md:h-5 text-yellow-400 shrink-0" />
-                <span className="text-[10px] md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Clima: </span><b className="text-white">24°C</b></span>
+              <div className="flex items-center gap-2 md:gap-2 text-slate-300 shrink-0">
+                <CloudSun className="w-5 h-5 md:w-5 md:h-5 text-yellow-400 shrink-0" />
+                <span className="text-sm md:text-sm whitespace-nowrap"><span className="hidden sm:inline">Clima: </span><b className="text-white">24°C</b></span>
               </div>
             </div>
           </div>
