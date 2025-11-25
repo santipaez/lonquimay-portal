@@ -1,6 +1,6 @@
 # Lonquimay Digital Portal 🇦🇷
 
-![Project Banner](/og-image.jpg)  
+![Project Banner](/public/og-image.jpg)  
 **Modern, accessible, and high-performance citizen portal for the Municipality of Lonquimay, La Pampa.**
 
 This portal digitizes municipal services, consolidates real-time information, and improves inclusivity for elderly citizens and residents in low-connectivity areas.
