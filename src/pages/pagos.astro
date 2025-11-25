@@ -14,7 +14,6 @@ import "../styles/global.css";
 	<Header client:load currentPage="Pagos" />
 
         <main class="min-h-screen bg-gray-50 pt-20 md:pt-28">
-            {/* Hero Section */}
             <section
                 class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16 md:py-24"
             >
@@ -36,10 +35,8 @@ import "../styles/global.css";
                 </div>
             </section>
 
-            {/* Main Content */}
             <section class="py-12 md:py-16">
                 <div class="container mx-auto px-4 md:px-8 max-w-6xl space-y-8">
-                    {/* Datos Bancarios */}
                     <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
                         <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
                             <CreditCard class="w-8 h-8 text-[#7bc143]" />
@@ -50,7 +47,6 @@ import "../styles/global.css";
                         </p>
                         
                         <div class="grid md:grid-cols-2 gap-6">
-                            {/* Alias */}
                             <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-100">
                                 <div class="flex items-center justify-between mb-4">
                                     <h3 class="font-bold text-gray-800 text-lg">Alias</h3>
@@ -68,7 +64,6 @@ import "../styles/global.css";
                                 <p class="text-sm text-gray-500 mt-2">(Ejemplo - actualizar con datos reales)</p>
                             </div>
 
-                            {/* CBU */}
                             <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border-2 border-blue-100">
                                 <div class="flex items-center justify-between mb-4">
                                     <h3 class="font-bold text-gray-800 text-lg">CBU</h3>
@@ -93,7 +88,6 @@ import "../styles/global.css";
                         </div>
                     </div>
 
-                    {/* Horarios de Caja */}
                     <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
                         <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
                             <Clock class="w-8 h-8 text-[#7bc143]" />
@@ -109,7 +103,6 @@ import "../styles/global.css";
                         </div>
                     </div>
 
-                    {/* Qué se puede pagar */}
                     <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
                         <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
                             <CheckCircle class="w-8 h-8 text-[#7bc143]" />
@@ -140,7 +133,6 @@ import "../styles/global.css";
                         </div>
                     </div>
 
-                    {/* WhatsApp Button */}
                     <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl shadow-xl p-8 md:p-10 text-white">
                         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                             <div class="flex-1">
@@ -164,7 +156,6 @@ import "../styles/global.css";
                         </div>
                     </div>
 
-                    {/* Información Adicional */}
                     <div class="bg-blue-50 rounded-2xl p-8 border border-blue-100">
                         <h3 class="font-bold text-gray-800 mb-4 text-lg flex items-center gap-2">
                             <Lightbulb class="w-5 h-5 text-blue-600" />
@@ -192,7 +183,6 @@ import "../styles/global.css";
 	<Footer />
 
 	<script>
-            // Funcionalidad para copiar al portapapeles
             function setupCopyButton(buttonId, textId, successId) {
                 const button = document.getElementById(buttonId);
                 const textElement = document.getElementById(textId);

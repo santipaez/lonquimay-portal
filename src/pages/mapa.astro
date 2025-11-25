@@ -28,7 +28,6 @@ import "../styles/global.css";
         <Header client:load currentPage="Mapa" />
 
         <main class="min-h-screen bg-gray-50 pt-20 md:pt-28">
-            {/* Hero Section */}
             <section
                 class="bg-gradient-to-r from-[#7bc143] to-[#6aa839] text-white py-16 md:py-24"
             >
@@ -47,14 +46,12 @@ import "../styles/global.css";
                 </div>
             </section>
 
-            {/* Map Section */}
             <section class="py-12 md:py-16">
                 <div class="container mx-auto px-4 md:px-8 max-w-6xl">
                     <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                         <InteractiveMap client:only="react" height="600px" showTitle={false} />
                     </div>
 
-                    {/* Información adicional */}
                     <div class="mt-8 bg-blue-50 rounded-2xl p-6 md:p-8 border border-blue-100">
                         <h3 class="font-bold text-gray-800 mb-4 text-lg flex items-center gap-2">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

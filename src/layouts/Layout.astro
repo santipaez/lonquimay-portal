@@ -1,6 +1,5 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
-// Importar solo los pesos necesarios de @fontsource
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -24,10 +23,8 @@ interface Props {
 
 const { title, description = "Sitio oficial de la Municipalidad de Lonquimay, La Pampa. Acceso a trámites, requisitos, noticias y servicios municipales." } = Astro.props;
 
-// URL base hardcodeada para Open Graph (WhatsApp necesita URLs absolutas estables)
 const siteUrl = "https://lonquimay-portal.vercel.app";
 const pageUrl = `${siteUrl}${Astro.url.pathname}`;
-// Imagen OG de 1200x630 para summary_large_image
 const ogImage = `${siteUrl}/og-image.jpg`;
 ---
 
@@ -38,37 +35,30 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
 		
-		<!-- PWA Meta Tags -->
 		<meta name="theme-color" content="#7bc143" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 		<meta name="apple-mobile-web-app-title" content="Lonquimay" />
 		<meta name="mobile-web-app-capable" content="yes" />
 		
-		<!-- Astro View Transitions - Optimizado para reducir reflows -->
 		<ViewTransitions fallback="animate" />
 		<meta name="astro-view-transitions-fallback" content="animate" />
 		
-		<!-- Preconnect para recursos externos críticos -->
 		<link rel="preconnect" href="https://api.open-meteo.com" />
 		<link rel="dns-prefetch" href="https://api.open-meteo.com" />
 
-		<!-- Favicon -->
 		<link rel="icon" type="image/png" href="/logo-lonquimay-96.png" />
 		<link rel="apple-touch-icon" href="/logo-lonquimay-192.png" />
 		<link rel="shortcut icon" href="/logo-lonquimay-96.png" />
 		
-		<!-- Preload recursos críticos - Logo optimizado (solo en header) -->
 		<link rel="preload" href="/logo-lonquimay-56.png" as="image" fetchpriority="high" />
 
-		<!-- SEO Meta Tags -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<meta name="author" content="Municipalidad de Lonquimay" />
 		<meta name="robots" content="index, follow" />
 		<link rel="canonical" href={pageUrl} />
 
-		<!-- Open Graph Meta Tags -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={pageUrl} />
 		<meta property="og:title" content={title} />
@@ -82,10 +72,8 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 		<meta property="og:site_name" content="Municipalidad de Lonquimay" />
 		<meta property="og:locale" content="es_AR" />
 		
-		<!-- WhatsApp específico: asegurar que la imagen se muestre -->
 		<meta property="og:image:url" content={ogImage} />
 
-		<!-- Twitter Card Meta Tags -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
@@ -96,12 +84,9 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 	<body class="bg-gray-50 m-0 p-0 w-full overflow-x-hidden">
 		<slot />
 		
-		<!-- Scripts optimizados - Cargados al final del body -->
 		<script defer>
 			(function() {
-				// Optimización: Reducir prefetching agresivo de View Transitions
 				if (typeof window !== 'undefined' && window.document) {
-					// Deshabilitar prefetching automático en conexiones lentas
 					if ('connection' in navigator) {
 						const conn = navigator.connection;
 						if (conn && (conn.saveData || /2g/.test(conn.effectiveType))) {
@@ -109,7 +94,6 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 						}
 					}
 					
-					// Optimizar scroll durante transiciones usando requestAnimationFrame
 					let scrollTimeout;
 					const originalScrollTo = window.scrollTo;
 					window.scrollTo = function(...args) {
@@ -121,7 +105,6 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 						});
 					};
 					
-					// Usar will-change estratégicamente para elementos persistentes
 					document.addEventListener('DOMContentLoaded', function() {
 						const persistentElements = document.querySelectorAll('[data-astro-transition-persist]');
 						persistentElements.forEach(el => {
@@ -134,7 +117,6 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 			})();
 		</script>
 		
-		<!-- IntersectionObserver nativo para animaciones on scroll -->
 		<script defer>
 			(function() {
 				'use strict';
@@ -173,7 +155,6 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 			})();
 		</script>
 		
-		<!-- Pagefind Search (solo en producción) - Carga diferida -->
 		{import.meta.env.PROD && (
 			<script src="/_pagefind/pagefind.js" type="module" defer></script>
 		)}
