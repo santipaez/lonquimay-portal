@@ -106,12 +106,47 @@ const WeatherWidget = () => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/weather');
-        if (!response.ok) {
-          throw new Error('Error al obtener datos del clima');
-        }
+        // Coordenadas de Lonquimay, La Pampa
+        const lat = -36.4667;
+        const lon = -63.6167;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,surface_pressure&timezone=America/Argentina/Buenos_Aires`;
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Error al obtener datos del clima');
+        
         const data = await response.json();
-        setWeatherData(data);
+        const current = data.current;
+        
+        const getDescription = (code: number): string => {
+          const descriptions: Record<number, string> = {
+            0: 'Cielo despejado', 1: 'Mayormente despejado', 2: 'Parcialmente nublado', 3: 'Nublado',
+            45: 'Niebla', 48: 'Niebla con escarcha', 51: 'Llovizna ligera', 53: 'Llovizna moderada',
+            55: 'Llovizna densa', 61: 'Lluvia ligera', 63: 'Lluvia moderada', 65: 'Lluvia fuerte',
+            71: 'Nieve ligera', 73: 'Nieve moderada', 75: 'Nieve fuerte', 77: 'Granizo',
+            80: 'Chubascos ligeros', 81: 'Chubascos moderados', 82: 'Chubascos fuertes',
+            95: 'Tormenta', 96: 'Tormenta con granizo', 99: 'Tormenta fuerte con granizo'
+          };
+          return descriptions[code] || 'Desconocido';
+        };
+        
+        const getIcon = (code: number): string => {
+          if (code === 0 || code === 1) return 'sunny';
+          if (code === 2) return 'partly-cloudy';
+          if (code === 3 || code === 45 || code === 48) return 'cloudy';
+          if (code >= 51 && code <= 67) return 'rainy';
+          if (code >= 71 && code <= 86) return 'snowy';
+          if (code >= 95) return 'stormy';
+          return 'cloudy';
+        };
+        
+        setWeatherData({
+          temperature: Math.round(current.temperature_2m),
+          humidity: current.relative_humidity_2m,
+          pressure: Math.round(current.surface_pressure),
+          windSpeed: Math.round(current.wind_speed_10m),
+          description: getDescription(current.weather_code),
+          icon: getIcon(current.weather_code),
+        });
         setError(null);
       } catch (err) {
         setError('No se pudo cargar el clima');
@@ -122,7 +157,6 @@ const WeatherWidget = () => {
     };
 
     fetchWeather();
-    // Actualizar cada 10 minutos
     const interval = setInterval(fetchWeather, 600000);
     return () => clearInterval(interval);
   }, []);
