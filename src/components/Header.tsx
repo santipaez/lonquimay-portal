@@ -32,20 +32,33 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
-        // Solo escuchar el scroll si el header puede ser transparente
         if (!transparent) {
-            // En páginas internas, siempre está sólido
             setIsScrolled(true);
             return;
         }
 
+        let ticking = false;
+        let lastScrollY = window.scrollY;
+        
         const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            setIsScrolled(scrollPosition > 50);
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollPosition = window.scrollY;
+                    if (Math.abs(scrollPosition - lastScrollY) > 5) {
+                        setIsScrolled(scrollPosition > 50);
+                        lastScrollY = scrollPosition;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll(); // Check initial position
+        
+        requestAnimationFrame(() => {
+            setIsScrolled(window.scrollY > 50);
+        });
 
         return () => window.removeEventListener('scroll', handleScroll);
     }, [transparent]);
@@ -112,10 +125,12 @@ export default function Header({ currentPage = 'Inicio', transparent = false }: 
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        initial={{ maxHeight: 0, opacity: 0 }}
+                        animate={{ maxHeight: 500, opacity: 1 }}
+                        exit={{ maxHeight: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="lg:hidden bg-white border-t border-gray-100 overflow-hidden"
+                        style={{ willChange: 'max-height, opacity' }}
                     >
                         <div className="flex flex-col p-4 space-y-4">
                             {menuItems.map((item) => (

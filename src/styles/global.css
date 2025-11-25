@@ -39,9 +39,22 @@ body {
     background: #6aa839;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling - Optimizado para evitar reflows */
 html {
     scroll-behavior: smooth;
+}
+
+/* Optimización de animaciones para evitar reflows */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimización para elementos animados */
+[data-astro-transition-persist],
+header {
+    will-change: transform, opacity;
+    transform: translateZ(0);
 }
 
 /* Line clamp utility for text truncation */
@@ -62,4 +75,53 @@ html {
 
 .leaflet-container img {
     max-width: none !important;
+}
+
+/* LCP Title Animation - Optimizado para renderizado inmediato */
+.lcp-title {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Prevenir layout shift durante carga de fuentes */
+.lcp-title {
+    font-display: swap;
+    text-rendering: optimizeLegibility;
+}
+
+/* Animaciones para otros elementos LCP (con delay mínimo) */
+.lcp-subtitle {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.1s forwards;
+}
+
+.lcp-search {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.2s forwards;
+}
+
+.lcp-popular {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

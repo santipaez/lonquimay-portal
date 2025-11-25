@@ -71,48 +71,43 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Solo ejecutar en el cliente
     if (typeof window === 'undefined') return;
     
     setIsClient(true);
 
-    let timer: NodeJS.Timeout;
     let mounted = true;
+    let observer: IntersectionObserver | null = null;
 
     const initMap = async () => {
       if (!mounted) return;
       try {
-        // Esperar a que el componente esté montado y el DOM esté listo
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        // Verificar que el contenedor esté disponible
         if (!mapContainerRef.current) {
-          // Intentar encontrar el contenedor por el atributo data
           const container = document.querySelector('[data-map-container="true"]');
           if (container && !mapContainerRef.current) {
-            // Si encontramos el contenedor pero el ref no está asignado, esperar un poco más
             await new Promise(resolve => setTimeout(resolve, 200));
           }
           
           if (!mapContainerRef.current) {
-            console.error('Contenedor del mapa no encontrado después de esperar');
-            console.log('Estado del ref:', mapContainerRef.current);
-            console.log('Contenedor en DOM:', document.querySelector('[data-map-container="true"]'));
             setIsLoading(false);
             return;
           }
         }
 
-        // Importación dinámica de Leaflet solo en el cliente
         const L = await import('leaflet');
         
-        // Cargar CSS de Leaflet desde CDN si no está disponible
+        // Cargar CSS de Leaflet de forma diferida
         if (!document.querySelector('link[href*="leaflet.css"]')) {
           const cssLink = document.createElement('link');
           cssLink.rel = 'stylesheet';
           cssLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
           cssLink.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
           cssLink.crossOrigin = '';
+          cssLink.media = 'print';
+          cssLink.onload = function() {
+            (this as HTMLLinkElement).media = 'all';
+          };
           document.head.appendChild(cssLink);
         }
         
@@ -242,10 +237,12 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
           maxZoom: 19
         }).addTo(map);
 
-        // Invalidar el tamaño del mapa para asegurar que se renderice correctamente
-        setTimeout(() => {
-          map.invalidateSize();
-        }, 100);
+        // Invalidar el tamaño del mapa usando requestAnimationFrame para evitar reflows
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            map.invalidateSize();
+          });
+        });
 
         // Agregar marcadores
         MAP_POINTS.forEach((point) => {
@@ -272,10 +269,12 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
         );
         map.fitBounds(group.getBounds().pad(0.1));
 
-        // Invalidar el tamaño del mapa para asegurar que se renderice
-        setTimeout(() => {
-          map.invalidateSize();
-        }, 100);
+        // Invalidar el tamaño del mapa usando requestAnimationFrame para evitar reflows
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            map.invalidateSize();
+          });
+        });
 
         mapRef.current = map;
         setIsLoading(false);
@@ -290,14 +289,29 @@ export default function InteractiveMap({ height = '600px', showTitle = true }: I
       }
     };
 
-    // Delay para asegurar que el componente esté montado y el DOM esté listo
-    timer = setTimeout(() => {
-      initMap();
-    }, 200);
+    const mapElement = mapContainerRef.current || document.querySelector('[data-map-container="true"]');
+    
+    if (mapElement && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && mounted) {
+            initMap();
+            if (observer) observer.disconnect();
+          }
+        },
+        { rootMargin: '200px' }
+      );
+      
+      observer.observe(mapElement);
+    } else {
+      setTimeout(() => {
+        if (mounted) initMap();
+      }, 500);
+    }
 
-    // Cleanup
     return () => {
-      if (timer) clearTimeout(timer);
+      mounted = false;
+      if (observer) observer.disconnect();
       if (mapRef.current) {
         try {
           mapRef.current.remove();

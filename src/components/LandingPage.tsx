@@ -25,7 +25,7 @@ import WhatsAppButton from './WhatsAppButton';
 import PagefindSearch from './PagefindSearch';
 import NewsSkeleton from './NewsSkeleton';
 import InteractiveMap from './InteractiveMap';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // --- Interfaces & Types ---
 interface ServiceBtn {
@@ -103,19 +103,33 @@ const WeatherWidget = () => {
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    let mounted = true;
+    let observer: IntersectionObserver | null = null;
+    let timeoutId: NodeJS.Timeout;
+
     const fetchWeather = async () => {
+      if (!mounted) return;
+      
       try {
         setLoading(true);
-        // Coordenadas de Lonquimay, La Pampa
         const lat = -36.4667;
         const lon = -63.6167;
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,surface_pressure&timezone=America/Argentina/Buenos_Aires`;
         
-        const response = await fetch(url);
+        const controller = new AbortController();
+        timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const response = await fetch(url, { 
+          signal: controller.signal,
+          priority: 'low' as RequestPriority
+        });
+        
         if (!response.ok) throw new Error('Error al obtener datos del clima');
         
         const data = await response.json();
         const current = data.current;
+        
+        if (!mounted) return;
         
         const getDescription = (code: number): string => {
           const descriptions: Record<number, string> = {
@@ -149,16 +163,51 @@ const WeatherWidget = () => {
         });
         setError(null);
       } catch (err) {
-        setError('No se pudo cargar el clima');
-        console.error('Error fetching weather:', err);
+        if (mounted && (err as Error).name !== 'AbortError') {
+          setError('No se pudo cargar el clima');
+          console.error('Error fetching weather:', err);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchWeather();
-    const interval = setInterval(fetchWeather, 600000);
-    return () => clearInterval(interval);
+    const widgetElement = document.querySelector('[data-weather-widget]');
+    let weatherInterval: NodeJS.Timeout | null = null;
+    
+    const startWeatherUpdates = () => {
+      fetchWeather();
+      weatherInterval = setInterval(() => {
+        if (mounted) fetchWeather();
+      }, 600000);
+    };
+    
+    if (widgetElement && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && mounted) {
+            startWeatherUpdates();
+            if (observer) observer.disconnect();
+          }
+        },
+        { rootMargin: '100px' }
+      );
+      
+      observer.observe(widgetElement);
+    } else {
+      setTimeout(() => {
+        if (mounted) startWeatherUpdates();
+      }, 1000);
+    }
+
+    return () => {
+      mounted = false;
+      if (observer) observer.disconnect();
+      if (timeoutId) clearTimeout(timeoutId);
+      if (weatherInterval) clearInterval(weatherInterval);
+    };
   }, []);
 
   const formatDate = (timestamp?: string) => {
@@ -192,7 +241,10 @@ const WeatherWidget = () => {
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-lg p-6 md:p-8 max-w-sm mx-auto border border-gray-100 relative overflow-hidden">
+    <div 
+      data-weather-widget
+      className="bg-white rounded-3xl shadow-lg p-6 md:p-8 max-w-sm mx-auto border border-gray-100 relative overflow-hidden"
+    >
       {/* Decorative background blur */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-100 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
 
@@ -293,7 +345,9 @@ export default function LandingPage() {
             loop
             muted
             playsInline
+            preload="none"
             className="w-full h-full object-cover"
+            style={{ willChange: 'auto' }}
           >
             <source src="/bg-lonqui.mp4" type="video/mp4" />
           </video>
@@ -305,35 +359,26 @@ export default function LandingPage() {
         <div className="relative z-10 container mx-auto px-6 md:px-12 mt-10">
           <div className="max-w-2xl">
             {/* Title */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-5xl md:text-7xl text-white mb-6 leading-tight tracking-tight"
+            <h1
+              className="text-5xl md:text-7xl text-white mb-6 leading-tight tracking-tight lcp-title"
               style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               <span className="font-light">Bienvenido a</span> <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-300 font-extrabold uppercase tracking-tight">
                 LONQUIMAY
               </span>
-            </motion.h1>
+            </h1>
 
             {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-lg md:text-xl text-slate-300 mb-10 font-light leading-relaxed max-w-lg"
+            <p
+              className="text-lg md:text-xl text-slate-300 mb-10 font-light leading-relaxed max-w-lg lcp-subtitle"
             >
               Gestión transparente y cercana. Accedé a trámites, servicios y noticias de tu municipio en un solo lugar.
-            </motion.p>
+            </p>
 
             {/* Search Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-white p-2 rounded-full flex flex-row gap-2 w-full max-w-lg relative shadow-2xl"
+            <div
+              className="bg-white p-2 rounded-full flex flex-row gap-2 w-full max-w-lg relative shadow-2xl lcp-search"
             >
               <div className="flex-1 flex items-center px-3 md:px-4 min-w-0">
                 <Search className="w-5 h-5 text-slate-400 mr-2 md:mr-3 shrink-0" />
@@ -342,9 +387,13 @@ export default function LandingPage() {
                 </div>
               </div>
               <button
-                onClick={() => {
-                  const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-                  if (input && input.value) {
+                onClick={(e) => {
+                  e.preventDefault();
+                  const form = e.currentTarget.closest('form') || 
+                              e.currentTarget.parentElement?.querySelector('input[type="text"]')?.closest('form');
+                  const input = form?.querySelector('input[type="text"]') as HTMLInputElement ||
+                               document.querySelector('input[type="text"]') as HTMLInputElement;
+                  if (input?.value) {
                     window.location.href = `/tramites?q=${encodeURIComponent(input.value)}`;
                   }
                 }}
@@ -352,19 +401,16 @@ export default function LandingPage() {
               >
                 Buscar
               </button>
-            </motion.div>
+            </div>
 
             {/* Popular Searches */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="mt-8 flex gap-4 text-sm text-slate-400 flex-wrap"
+            <div
+              className="mt-8 flex gap-4 text-sm text-slate-400 flex-wrap lcp-popular"
             >
               <span>Lo más buscado:</span>
               <a href="/pagos" className="text-white hover:text-green-400 underline decoration-green-500/50 underline-offset-4 transition-colors">Impuestos</a>
               <a href="/tramites" className="text-white hover:text-green-400 underline decoration-green-500/50 underline-offset-4 transition-colors">Licencia</a>
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -409,9 +455,10 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.1, ease: "easeOut" }}
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
+              style={{ willChange: 'transform, opacity' }}
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -428,9 +475,10 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.2, ease: "easeOut" }}
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
+              style={{ willChange: 'transform, opacity' }}
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -447,9 +495,10 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.3, ease: "easeOut" }}
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
+              style={{ willChange: 'transform, opacity' }}
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -466,9 +515,10 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.4, ease: "easeOut" }}
               whileHover={{ y: -8 }}
               className="group bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(22,163,74,0.2)] transition-all duration-300"
+              style={{ willChange: 'transform, opacity' }}
             >
               <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors shadow-sm">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -502,8 +552,9 @@ export default function LandingPage() {
                   key={news.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
+                  transition={{ delay: idx * 0.1, ease: "easeOut" }}
                   className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-green-100/50 transition-all group cursor-pointer"
+                  style={{ willChange: 'transform, opacity' }}
                 >
                   <div className="h-48 overflow-hidden relative bg-gray-200">
                     <span className="absolute top-4 left-4 bg-[#7bc143] text-white text-xs font-bold px-3 py-1 rounded-full z-10">
@@ -514,11 +565,11 @@ export default function LandingPage() {
                       alt={news.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        // Fallback a una imagen placeholder si falla
                         const target = e.target as HTMLImageElement;
                         target.src = `https://via.placeholder.com/800x400/7bc143/ffffff?text=${encodeURIComponent(news.title)}`;
                       }}
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <div className="p-6">
@@ -543,7 +594,7 @@ export default function LandingPage() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <InteractiveMap client:only="react" height="500px" showTitle={true} />
+            <InteractiveMap client:visible="react" height="500px" showTitle={true} />
             <div className="mt-8 text-center">
               <a
                 href="/mapa"
