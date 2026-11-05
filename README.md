@@ -5,11 +5,13 @@
 
 This portal digitizes municipal services, consolidates real-time information, and improves inclusivity for elderly citizens and residents in low-connectivity areas.
 
+**Live demo:** <https://lonquimay-portal.vercel.app>
+
 ---
 
 ## 🚀 Tech Stack
 
-- **Framework:** [Astro 4](https://astro.build/) (SSG + Islands Architecture)
+- **Framework:** [Astro 5](https://astro.build/) (SSG + Islands Architecture)
 - **Interactivity:** React islands (Interactive Map, Weather, WhatsApp CTA)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/) + custom gradients
 - **Animations:** Framer Motion + IntersectionObserver for native perf
